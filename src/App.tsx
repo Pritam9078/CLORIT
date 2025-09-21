@@ -33,6 +33,7 @@ import TrackImpact from "./components/TrackImpact";
 import EarnCredits from "./components/EarnCredits";
 import NDVIApp from "./components/NDVIApp";
 import Preloader from "./components/Preloader";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -92,12 +93,28 @@ const App = () => {
           <Route path="/admin-signup" element={<AdminSignup />} />
           
           {/* User Dashboards */}
-          <Route path="/community-dashboard" element={<CommunityDashboard />} />
-          <Route path="/ngo-dashboard" element={<NGODashboard />} />
+          <Route path="/community-dashboard" element={
+            <ProtectedRoute requiredRole="community">
+              <CommunityDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/ngo-dashboard" element={
+            <ProtectedRoute requiredRole="ngo">
+              <NGODashboard />
+            </ProtectedRoute>
+          } />
           
           {/* Admin Dashboards */}
-          <Route path="/corporate-dashboard" element={<CorporateDashboard />} />
-          <Route path="/corporate-analytics" element={<CorporateAnalytics />} />
+          <Route path="/corporate-dashboard" element={
+            <ProtectedRoute>
+              <CorporateDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/corporate-analytics" element={
+            <ProtectedRoute>
+              <CorporateAnalytics />
+            </ProtectedRoute>
+          } />
           <Route path="/corporate-settings" element={<CorporateSettings />} />
           <Route path="/corporate-marketplace" element={<CorporateBuyerMarketplaceDashboard />} />
           <Route path="/corporate-portfolio" element={<CorporatePortfolioManagement />} />

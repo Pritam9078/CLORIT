@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { AuthUtils } from '../utils/auth';
 
 const UserLogin = () => {
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const styles = {
     container: {
@@ -100,6 +103,19 @@ const UserLogin = () => {
       fontWeight: 500,
       transition: 'all 0.2s',
       marginTop: '1.5rem'
+    },
+    errorMessage: {
+      color: '#dc2626',
+      fontSize: '0.875rem',
+      marginBottom: '1rem',
+      padding: '0.75rem',
+      backgroundColor: '#fee2e2',
+      borderRadius: '6px',
+      border: '1px solid #fecaca'
+    },
+    loadingButton: {
+      opacity: 0.7,
+      cursor: 'not-allowed'
     }
   };
 
@@ -111,32 +127,68 @@ const UserLogin = () => {
     }));
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
     
-    // Mock role detection - in real app this would come from backend
-    const userRoles = {
-      'community@example.com': 'community',
-      'ngo@example.com': 'ngo',
-      'panchayat@example.com': 'panchayat'
-    };
-    
-    const userRole = userRoles[credentials.email as keyof typeof userRoles] || 'community';
-    
-        // Redirect based on role
-    switch (userRole) {
-      case 'community':
-        window.location.href = '/community-dashboard';
-        break;
-      case 'ngo':
-        window.location.href = '/ngo-dashboard';
-        break;
-      case 'panchayat':
-        window.location.href = '/panchayat-dashboard';
-        break;
-      default:
-        window.location.href = '/community-dashboard';
-        break;
+    try {
+      // Mock authentication - in real app this would be an API call
+      const userProfiles = {
+        'community@example.com': {
+          id: 'community-001',
+          name: 'Rajesh Kumar',
+          email: 'community@example.com',
+          role: 'community'
+        },
+        'ngo@example.com': {
+          id: 'ngo-001',
+          name: 'Green Earth NGO',
+          email: 'ngo@example.com',
+          role: 'ngo'
+        },
+        'panchayat@example.com': {
+          id: 'panchayat-001',
+          name: 'Village Panchayat',
+          email: 'panchayat@example.com',
+          role: 'panchayat'
+        }
+      };
+      
+      const userProfile = userProfiles[credentials.email as keyof typeof userProfiles];
+      
+      if (!userProfile) {
+        setError('Invalid email or password. Please use demo accounts listed below.');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Set authentication data
+      localStorage.setItem('authToken', 'mock-jwt-token-' + Date.now());
+      localStorage.setItem('refreshToken', 'mock-refresh-token-' + Date.now());
+      AuthUtils.saveUserProfile(userProfile);
+      
+      // Redirect based on role
+      switch (userProfile.role) {
+        case 'community':
+          window.location.href = '/community-dashboard';
+          break;
+        case 'ngo':
+          window.location.href = '/ngo-dashboard';
+          break;
+        case 'panchayat':
+          window.location.href = '/panchayat-dashboard';
+          break;
+        default:
+          window.location.href = '/community-dashboard';
+          break;
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
+      setIsLoading(false);
     }
   };
 
@@ -153,6 +205,12 @@ const UserLogin = () => {
         </div>
 
         <form style={styles.form} onSubmit={handleLogin}>
+          {error && (
+            <div style={styles.errorMessage}>
+              {error}
+            </div>
+          )}
+          
           <div style={styles.formGroup}>
             <label style={styles.label}>Email Address</label>
             <input
@@ -164,6 +222,7 @@ const UserLogin = () => {
               style={styles.input}
               onFocus={(e) => (e.target.style.borderColor = '#667eea')}
               onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+              disabled={isLoading}
               required
             />
           </div>
@@ -179,23 +238,32 @@ const UserLogin = () => {
               style={styles.input}
               onFocus={(e) => (e.target.style.borderColor = '#667eea')}
               onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+              disabled={isLoading}
               required
             />
           </div>
 
           <button
             type="submit"
-            style={styles.loginButton}
+            style={{
+              ...styles.loginButton,
+              ...(isLoading ? styles.loadingButton : {})
+            }}
+            disabled={isLoading}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
+              if (!isLoading) {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
+              if (!isLoading) {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }
             }}
           >
-            Login to Dashboard
+            {isLoading ? 'Logging in...' : 'Login to Dashboard'}
           </button>
 
           <div style={styles.forgotPassword}>

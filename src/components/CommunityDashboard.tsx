@@ -8,6 +8,30 @@ const CommunityDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check if user is authenticated
+    if (!AuthUtils.isAuthenticated()) {
+      navigate('/login-options');
+      return;
+    }
+
+    // Check if user has community role
+    const userRole = AuthUtils.getUserRole();
+    if (userRole && userRole !== 'community') {
+      // Redirect to appropriate dashboard
+      switch (userRole) {
+        case 'ngo':
+          navigate('/ngo-dashboard');
+          break;
+        case 'panchayat':
+          navigate('/panchayat-dashboard');
+          break;
+        default:
+          navigate('/login-options');
+          break;
+      }
+      return;
+    }
+
     // Initialize mock user profile if not exists
     const currentUser = AuthUtils.getCurrentUser();
     if (!currentUser) {
@@ -19,7 +43,7 @@ const CommunityDashboard = () => {
       };
       AuthUtils.saveUserProfile(mockUser);
     }
-  }, []);
+  }, [navigate]);
 
   const styles = {
     container: {
