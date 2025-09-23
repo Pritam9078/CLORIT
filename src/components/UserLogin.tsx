@@ -129,8 +129,7 @@ const UserLogin = () => {
     const userRoles = {
       'community@example.com': 'community',
       'ngo@example.com': 'ngo', 
-      'panchayat@example.com': 'panchayat',
-      'buyer@company.com': 'corporate'
+      'admin@panchayat.gov': 'panchayat-admin'
     };
     
     const userRole = userRoles[credentials.email as keyof typeof userRoles] || 'community';
@@ -155,11 +154,8 @@ const UserLogin = () => {
       case 'ngo':
         window.location.href = '/ngo-dashboard';
         break;
-      case 'panchayat':
-        window.location.href = '/panchayat-dashboard';
-        break;
-      case 'corporate':
-        window.location.href = '/corporate-dashboard';
+      case 'panchayat-admin':
+        window.location.href = '/panchayat-admin-dashboard';
         break;
       default:
         window.location.href = '/community-dashboard';
@@ -171,8 +167,7 @@ const UserLogin = () => {
     const roleNames = {
       'community': 'Rajesh Kumar',
       'ngo': 'Environmental NGO',
-      'panchayat': 'Panchayat Admin',
-      'corporate': 'Acme Corporation'
+      'panchayat-admin': 'Panchayat Administrator'
     };
     return roleNames[role as keyof typeof roleNames] || 'User';
   };
@@ -269,8 +264,7 @@ const UserLogin = () => {
           <strong>Demo Accounts:</strong><br />
           Community: community@example.com<br />
           NGO: ngo@example.com<br />
-          Panchayat: panchayat@example.com<br />
-          Corporate Buyer: buyer@company.com<br />
+          Panchayat Admin: admin@panchayat.gov<br />
           Password: any
         </div>
       </div>

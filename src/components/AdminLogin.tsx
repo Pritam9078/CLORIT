@@ -201,7 +201,6 @@ const AdminLogin = () => {
     // Mock admin role detection - in real app this would come from backend
     const adminRoles = {
       'buyer@company.com': 'corporate-buyer',
-      'admin@panchayat.gov': 'panchayat-admin',
       'admin@nccr.gov': 'nccr-admin'
     };
     
@@ -224,9 +223,6 @@ const AdminLogin = () => {
       case 'corporate-buyer':
         window.location.href = '/corporate-dashboard';
         break;
-      case 'panchayat-admin':
-        window.location.href = '/panchayat-admin-dashboard';
-        break;
       case 'nccr-admin':
         window.location.href = '/nccr-dashboard';
         break;
@@ -238,7 +234,6 @@ const AdminLogin = () => {
   const getAdminNameByRole = (role: string): string => {
     const roleNames = {
       'corporate-buyer': 'Corporate Admin',
-      'panchayat-admin': 'Panchayat Administrator', 
       'nccr-admin': 'NCCR Administrator'
     };
     return roleNames[role as keyof typeof roleNames] || 'Admin';
@@ -368,10 +363,9 @@ const AdminLogin = () => {
         }}>
           <strong>Demo Admin Accounts:</strong><br />
           Corporate Buyer: buyer@company.com<br />
-          Panchayat Admin: admin@panchayat.gov<br />
-          NCCR Admin: admin@nccr.gov<br />
           Password: any<br /><br />
           <strong>NCCR Super Admin:</strong><br />
+          NCCR Admin: admin@nccr.gov<br />
           Key: NCCR987
         </div>
       </div>
