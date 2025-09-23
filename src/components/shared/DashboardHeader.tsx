@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthUtils, UserProfile } from '../../utils/auth';
-import { WalletUtils, WalletState } from '../../utils/wallet';
+import { WalletUtils, WalletState } from '../../utils/walletUtils';
 import LogoutModal from './LogoutModal';
 import ProfileManager from './ProfileManager';
 

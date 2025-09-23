@@ -34,6 +34,7 @@ import TrackImpact from "./components/TrackImpact";
 import EarnCredits from "./components/EarnCredits";
 import NDVIApp from "./components/NDVIApp";
 import Preloader from "./components/Preloader";
+import WalletTestPage from "./pages/WalletTestPage";
 
 const queryClient = new QueryClient();
 
@@ -48,8 +49,8 @@ const App = () => {
   const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
-    // Initialize wallet-free environment to prevent conflicts
-    WalletConflictHandler.initializeWalletFreeEnvironment();
+    // Initialize wallet-compatible environment to prevent conflicts
+    WalletConflictHandler.initializeWalletCompatibleEnvironment();
     
     // Mark app as loaded in sessionStorage on first load
     if (showPreloader && !sessionStorage.getItem('clorit-app-loaded')) {
@@ -123,6 +124,9 @@ const App = () => {
           
           {/* Missing Components - Placeholder Routes */}
           <Route path="/carbon-credit-minting" element={<div>Carbon Credit Minting Component Coming Soon</div>} />
+          
+          {/* Test Pages */}
+          <Route path="/wallet-test" element={<WalletTestPage />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

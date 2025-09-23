@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AuthUtils, UserProfile } from '../../utils/auth';
-import { WalletState } from '../../utils/wallet';
+import { WalletState } from '../../utils/walletUtils';
 import WalletConnector from './WalletConnector';
+import ErrorBoundary from './ErrorBoundary';
 
 interface ProfileManagerProps {
   userRole: 'community' | 'ngo' | 'panchayat' | 'corporate' | 'nccr';
@@ -63,6 +64,18 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ userRole, onProfileUpda
 
   const handleWalletChange = (newWalletState: WalletState | null) => {
     setWalletState(newWalletState);
+    
+    // Update profile with wallet address when connected
+    if (newWalletState?.isConnected && newWalletState?.address && profile) {
+      const updatedProfile: UserProfile = {
+        ...profile,
+        walletAddress: newWalletState.address,
+      };
+      
+      AuthUtils.saveUserProfile(updatedProfile);
+      setProfile(updatedProfile);
+      onProfileUpdate?.(updatedProfile);
+    }
   };
 
   const getRoleSpecificFields = () => {
@@ -408,6 +421,41 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ userRole, onProfileUpda
             )}
           </div>
 
+          {/* Show wallet address if connected */}
+          {(walletState?.isConnected && walletState?.address) && (
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Wallet Address</label>
+              <div style={{...styles.readOnlyValue, display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                <span style={{ 
+                  fontFamily: 'monospace', 
+                  fontSize: '0.75rem',
+                  color: '#059669',
+                  background: '#ecfdf5',
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: '4px',
+                  border: '1px solid #a7f3d0'
+                }}>
+                  {`${walletState.address.slice(0, 6)}...${walletState.address.slice(-4)}`}
+                </span>
+                <button
+                  onClick={() => navigator.clipboard.writeText(walletState.address)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    fontSize: '0.75rem',
+                    color: '#6b7280'
+                  }}
+                  title="Copy full address"
+                >
+                  📋
+                </button>
+                <span style={{ fontSize: '0.625rem', color: '#10b981' }}>✓ Connected</span>
+              </div>
+            </div>
+          )}
+
           {isEditing && getRoleSpecificFields()}
         </div>
       </div>
@@ -431,7 +479,40 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ userRole, onProfileUpda
 
       <div style={styles.walletSection}>
         <h4 style={styles.walletTitle}>🦊 Blockchain Wallet</h4>
-        <WalletConnector onWalletChange={handleWalletChange} />
+        <ErrorBoundary
+          fallback={({ error, resetError }) => (
+            <div style={{
+              background: '#fff3cd',
+              border: '1px solid #ffeaa7',
+              borderRadius: '8px',
+              padding: '1rem',
+              textAlign: 'center' as const
+            }}>
+              <p style={{ color: '#856404', margin: '0 0 0.5rem 0', fontSize: '0.875rem' }}>
+                ⚠️ Wallet connection temporarily unavailable
+              </p>
+              <p style={{ color: '#6c5000', margin: '0 0 1rem 0', fontSize: '0.75rem' }}>
+                {error?.message || 'Please try refreshing the page'}
+              </p>
+              <button
+                onClick={resetError}
+                style={{
+                  background: '#856404',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem'
+                }}
+              >
+                Retry Connection
+              </button>
+            </div>
+          )}
+        >
+          <WalletConnector onWalletChange={handleWalletChange} />
+        </ErrorBoundary>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { WalletUtils, WalletState } from '../../utils/wallet';
+import { WalletUtils, WalletState } from '../../utils/walletUtils';
+import { WalletConflictHandler } from '../../utils/walletConflictHandler';
 
 interface WalletConnectorProps {
   onWalletChange?: (walletState: WalletState | null) => void;
@@ -9,62 +10,137 @@ const WalletConnector: React.FC<WalletConnectorProps> = ({ onWalletChange }) => 
   const [walletState, setWalletState] = useState<WalletState | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasError, setHasError] = useState(false);
+
+  // Error boundary-like error handling
+  const handleError = (error: any, context: string) => {
+    console.error(`WalletConnector error in ${context}:`, error);
+    setError(`Error in ${context}: ${error.message || 'Unknown error'}`);
+    setHasError(true);
+  };
 
   useEffect(() => {
-    // Load existing wallet state
-    const savedWalletState = WalletUtils.getWalletState();
-    if (savedWalletState) {
-      setWalletState(savedWalletState);
-      onWalletChange?.(savedWalletState);
+    try {
+      // Initialize wallet-compatible environment
+      WalletConflictHandler.initializeWalletCompatibleEnvironment();
+      
+      // Check for existing wallet connection
+      checkExistingConnection();
+      
+      // Listen for account changes if available
+      const provider = WalletUtils.getEthereumProvider();
+      if (provider && typeof provider.on === 'function') {
+        const handleAccountsChanged = (accounts: string[]) => {
+          try {
+            if (accounts.length === 0) {
+              handleDisconnect();
+            } else {
+              // Update wallet state with new account
+              setWalletState(prev => prev ? { ...prev, address: accounts[0] } : null);
+            }
+          } catch (error) {
+            handleError(error, 'account change handler');
+          }
+        };
+
+        const handleChainChanged = () => {
+          try {
+            // Refresh wallet state when chain changes
+            if (walletState?.isConnected) {
+              checkExistingConnection();
+            }
+          } catch (error) {
+            handleError(error, 'chain change handler');
+          }
+        };
+
+        try {
+          provider.on('accountsChanged', handleAccountsChanged);
+          provider.on('chainChanged', handleChainChanged);
+
+          return () => {
+            try {
+              if (provider.removeListener && typeof provider.removeListener === 'function') {
+                provider.removeListener('accountsChanged', handleAccountsChanged);
+                provider.removeListener('chainChanged', handleChainChanged);
+              }
+            } catch (error) {
+              console.warn('Error removing wallet event listeners:', error);
+            }
+          };
+        } catch (error) {
+          handleError(error, 'event listener setup');
+        }
+      }
+    } catch (error) {
+      handleError(error, 'useEffect initialization');
     }
-
-    // Listen for account changes
-    WalletUtils.onAccountChange((accounts) => {
-      if (accounts.length === 0) {
-        handleDisconnect();
-      } else {
-        // Refresh wallet state
-        handleConnect();
-      }
-    });
-
-    // Listen for chain changes
-    WalletUtils.onChainChange(() => {
-      // Refresh wallet state when chain changes
-      if (walletState?.isConnected) {
-        handleConnect();
-      }
-    });
-
-    return () => {
-      WalletUtils.removeListeners();
-    };
   }, []);
 
-  const handleConnect = async () => {
-    if (!WalletUtils.isMetaMaskInstalled()) {
-      setError('MetaMask is not installed. Please install MetaMask to continue.');
-      return;
-    }
-
-    setIsConnecting(true);
-    setError(null);
-
+  const checkExistingConnection = async () => {
     try {
-      const newWalletState = await WalletUtils.connectWallet();
-      setWalletState(newWalletState);
-      onWalletChange?.(newWalletState);
+      const provider = WalletUtils.getEthereumProvider();
+      if (provider && typeof provider.request === 'function') {
+        const accounts = await provider.request({ method: 'eth_accounts' });
+        if (accounts && accounts.length > 0) {
+          const chainId = await provider.request({ method: 'eth_chainId' });
+          const existingWalletState: WalletState = {
+            isConnected: true,
+            address: accounts[0],
+            chainId: chainId || '0x1',
+          };
+          
+          setWalletState(existingWalletState);
+          onWalletChange?.(existingWalletState);
+        }
+      }
+    } catch (error) {
+      console.warn('Error checking existing connection:', error);
+    }
+  };
+
+  const handleConnect = async () => {
+    try {
+      if (!WalletUtils.isMetaMaskAvailable()) {
+        setError('MetaMask is not installed. Please install MetaMask to continue.');
+        return;
+      }
+
+      setIsConnecting(true);
+      setError(null);
+      setHasError(false);
+
+      const result = await WalletUtils.connectWallet();
+      
+      if (result.success && result.address) {
+        const newWalletState: WalletState = {
+          isConnected: true,
+          address: result.address,
+          chainId: result.chainId || '0x1',
+        };
+        
+        setWalletState(newWalletState);
+        onWalletChange?.(newWalletState);
+      } else {
+        throw new Error(result.error || 'Failed to connect wallet');
+      }
     } catch (error: any) {
-      setError(error.message);
+      handleError(error, 'wallet connection');
     } finally {
       setIsConnecting(false);
     }
   };
 
   const handleDisconnect = () => {
-    WalletUtils.disconnectWallet();
-    setWalletState(null);
-    onWalletChange?.(null);
+    try {
+      WalletUtils.disconnectWallet();
+      setWalletState(null);
+      onWalletChange?.(null);
+      setError(null);
+      setHasError(false);
+    } catch (error: any) {
+      handleError(error, 'wallet disconnection');
+    }
   };
 
   const handleSwitchToSepolia = async () => {
@@ -160,6 +236,27 @@ const WalletConnector: React.FC<WalletConnectorProps> = ({ onWalletChange }) => 
     },
   };
 
+  // Error boundary protection
+  if (hasError) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.errorMessage}>
+          ⚠️ Wallet component error: {error || 'Unknown error occurred'}
+        </div>
+        <button 
+          style={styles.connectButton} 
+          onClick={() => {
+            setHasError(false);
+            setError(null);
+            window.location.reload();
+          }}
+        >
+          Reload Page
+        </button>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div style={styles.container}>
@@ -223,11 +320,11 @@ const WalletConnector: React.FC<WalletConnectorProps> = ({ onWalletChange }) => 
             🦊 {WalletUtils.formatAddress(walletState.address!)}
           </div>
           <div style={styles.walletBalance}>
-            Balance: {walletState.balance} ETH
+            Chain ID: {walletState.chainId}
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {walletState.chainId !== 11155111 && (
+          {walletState.chainId !== '0x1' && (
             <button 
               style={styles.chainButton}
               onClick={handleSwitchToSepolia}
