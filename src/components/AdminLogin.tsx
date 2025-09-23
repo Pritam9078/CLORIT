@@ -187,6 +187,17 @@ const AdminLogin = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Prevent wallet extension interference
+    try {
+      // Clear any wallet-related errors
+      if (window.ethereum) {
+        window.ethereum.removeAllListeners();
+      }
+    } catch (error) {
+      // Ignore wallet-related errors
+      console.warn('Wallet extension detected but ignored for admin authentication');
+    }
+    
     // Mock admin role detection - in real app this would come from backend
     const adminRoles = {
       'buyer@company.com': 'corporate-buyer',
@@ -196,6 +207,18 @@ const AdminLogin = () => {
     
     const adminRole = adminRoles[credentials.email as keyof typeof adminRoles] || 'corporate-buyer';
     
+    // Save authentication token and user profile (wallet-free)
+    const authToken = `admin_auth_${Date.now()}_${adminRole}`;
+    localStorage.setItem('authToken', authToken);
+    
+    const userProfile = {
+      id: `${adminRole}-${Date.now()}`,
+      name: getAdminNameByRole(adminRole),
+      email: credentials.email,
+      role: adminRole,
+    };
+    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+    
     // Redirect based on admin role
     switch (adminRole) {
       case 'corporate-buyer':
@@ -204,9 +227,21 @@ const AdminLogin = () => {
       case 'panchayat-admin':
         window.location.href = '/panchayat-admin-dashboard';
         break;
+      case 'nccr-admin':
+        window.location.href = '/nccr-dashboard';
+        break;
       default:
         window.location.href = '/corporate-dashboard';
     }
+  };
+
+  const getAdminNameByRole = (role: string): string => {
+    const roleNames = {
+      'corporate-buyer': 'Corporate Admin',
+      'panchayat-admin': 'Panchayat Administrator', 
+      'nccr-admin': 'NCCR Administrator'
+    };
+    return roleNames[role as keyof typeof roleNames] || 'Admin';
   };
 
   const handleBack = () => {
@@ -331,8 +366,10 @@ const AdminLogin = () => {
           fontSize: '0.8rem',
           color: '#92400e'
         }}>
-          <strong>Demo Accounts:</strong><br />
+          <strong>Demo Admin Accounts:</strong><br />
           Corporate Buyer: buyer@company.com<br />
+          Panchayat Admin: admin@panchayat.gov<br />
+          NCCR Admin: admin@nccr.gov<br />
           Password: any<br /><br />
           <strong>NCCR Super Admin:</strong><br />
           Key: NCCR987

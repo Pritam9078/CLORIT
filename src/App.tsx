@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
+import WalletConflictHandler from "./utils/walletConflictHandler";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import DashboardNavigator from "./components/DashboardNavigator";
@@ -33,7 +34,6 @@ import TrackImpact from "./components/TrackImpact";
 import EarnCredits from "./components/EarnCredits";
 import NDVIApp from "./components/NDVIApp";
 import Preloader from "./components/Preloader";
-import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +48,9 @@ const App = () => {
   const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
+    // Initialize wallet-free environment to prevent conflicts
+    WalletConflictHandler.initializeWalletFreeEnvironment();
+    
     // Mark app as loaded in sessionStorage on first load
     if (showPreloader && !sessionStorage.getItem('clorit-app-loaded')) {
       sessionStorage.setItem('clorit-app-loaded', 'true');
@@ -93,28 +96,12 @@ const App = () => {
           <Route path="/admin-signup" element={<AdminSignup />} />
           
           {/* User Dashboards */}
-          <Route path="/community-dashboard" element={
-            <ProtectedRoute requiredRole="community">
-              <CommunityDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/ngo-dashboard" element={
-            <ProtectedRoute requiredRole="ngo">
-              <NGODashboard />
-            </ProtectedRoute>
-          } />
+          <Route path="/community-dashboard" element={<CommunityDashboard />} />
+          <Route path="/ngo-dashboard" element={<NGODashboard />} />
           
           {/* Admin Dashboards */}
-          <Route path="/corporate-dashboard" element={
-            <ProtectedRoute>
-              <CorporateDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/corporate-analytics" element={
-            <ProtectedRoute>
-              <CorporateAnalytics />
-            </ProtectedRoute>
-          } />
+          <Route path="/corporate-dashboard" element={<CorporateDashboard />} />
+          <Route path="/corporate-analytics" element={<CorporateAnalytics />} />
           <Route path="/corporate-settings" element={<CorporateSettings />} />
           <Route path="/corporate-marketplace" element={<CorporateBuyerMarketplaceDashboard />} />
           <Route path="/corporate-portfolio" element={<CorporatePortfolioManagement />} />

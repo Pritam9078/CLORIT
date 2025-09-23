@@ -114,17 +114,40 @@ const UserLogin = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Prevent wallet extension interference
+    try {
+      // Clear any wallet-related errors
+      if (window.ethereum) {
+        window.ethereum.removeAllListeners();
+      }
+    } catch (error) {
+      // Ignore wallet-related errors
+      console.warn('Wallet extension detected but ignored for authentication');
+    }
+    
     // Mock role detection - in real app this would come from backend
     const userRoles = {
       'community@example.com': 'community',
-      'ngo@example.com': 'ngo',
+      'ngo@example.com': 'ngo', 
       'panchayat@example.com': 'panchayat',
       'buyer@company.com': 'corporate'
     };
     
     const userRole = userRoles[credentials.email as keyof typeof userRoles] || 'community';
     
-        // Redirect based on role
+    // Save authentication token and user profile (wallet-free)
+    const authToken = `auth_${Date.now()}_${userRole}`;
+    localStorage.setItem('authToken', authToken);
+    
+    const userProfile = {
+      id: `${userRole}-${Date.now()}`,
+      name: getUserNameByRole(userRole),
+      email: credentials.email,
+      role: userRole,
+    };
+    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+    
+    // Redirect based on role
     switch (userRole) {
       case 'community':
         window.location.href = '/community-dashboard';
@@ -142,6 +165,16 @@ const UserLogin = () => {
         window.location.href = '/community-dashboard';
         break;
     }
+  };
+
+  const getUserNameByRole = (role: string): string => {
+    const roleNames = {
+      'community': 'Rajesh Kumar',
+      'ngo': 'Environmental NGO',
+      'panchayat': 'Panchayat Admin',
+      'corporate': 'Acme Corporation'
+    };
+    return roleNames[role as keyof typeof roleNames] || 'User';
   };
 
   const handleBack = () => {
