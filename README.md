@@ -1,40 +1,70 @@
-# Welcome to your Lovable project
+# CLORIT - Carbon Credit & Blue Carbon Restoration Platform
 
-## Project info
+A comprehensive platform for carbon credit management, blue carbon restoration projects, and sustainability tracking.
 
-**URL**: https://lovable.dev/projects/63bf6012-aa3e-415c-b18e-675d1ba5f106
+## 🚀 Quick Start & Deployment
 
-## How can I edit this code?
+### Vercel Deployment Instructions
 
-There are several ways of editing your application.
+1. **Prerequisites**: Ensure your project builds successfully locally
+2. **Environment Variables**: Add to your Vercel project settings:
+   ```
+   EXAMPLE_NAME=I9JU23NF394R6HH
+   ```
 
-**Use Lovable**
+3. **Deployment Settings**:
+   - Framework: Vite
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Install Command: `npm install --legacy-peer-deps`
+   - Root Directory: `./`
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/63bf6012-aa3e-415c-b18e-675d1ba5f106) and start prompting.
+### 🔐 Demo Login Credentials
 
-Changes made via Lovable will be committed automatically to this repo.
+**Corporate Buyer**: buyer@company.com  
+**Community**: community@example.com  
+**NGO**: ngo@example.com  
+**Panchayat**: panchayat@example.com  
+**Password**: any
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Local Development
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Step 1: Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Step 2: Navigate to the project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Step 3: Install dependencies (with legacy peer deps for compatibility)
+npm install --legacy-peer-deps
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Start the development server
 npm run dev
+
+# Build for production
+npm run build
 ```
+
+## 🛠️ Troubleshooting Vercel Deployment
+
+### Common Issues Fixed:
+- ✅ React Three.js dependency conflicts resolved
+- ✅ TypeScript interface naming issues fixed  
+- ✅ Corporate buyer authentication added
+- ✅ Build optimization configured
+
+### If Build Fails:
+1. Use `npm install --legacy-peer-deps` 
+2. Check all TypeScript errors are resolved
+3. Verify environment variables are set
+
+## Project Features
+
+- **Role-based Dashboards**: Community, NGO, Panchayat, Corporate Buyer access
+- **Blue Carbon Management**: Site monitoring, restoration tracking  
+- **Carbon Credit Marketplace**: Trading platform for verified credits
+- **Real-time Analytics**: Impact tracking and sustainability reporting
 
 **Edit a file directly in GitHub**
 

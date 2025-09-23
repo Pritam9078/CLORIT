@@ -45,12 +45,12 @@
     "@radix-ui/react-toggle": "^1.1.9",
     "@radix-ui/react-toggle-group": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.7",
-    "@react-three/drei": "^9.109.2",
-    "@react-three/fiber": "^8.17.10",
+    "@react-three/drei": "^9.105.6",
+    "@react-three/fiber": "^8.16.8",
     "@tanstack/react-query": "^5.83.0",
     "@types/cesium": "^1.67.14",
     "@types/mapbox-gl": "^3.4.1",
-    "@types/three": "^0.168.0",
+    "@types/three": "^0.180.0",
     "cesium": "^1.133.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -74,9 +74,13 @@
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "three": "^0.168.0",
+    "three": "^0.180.0",
     "vaul": "^0.9.9",
     "zod": "^3.25.76"
+  },
+  "resolutions": {
+    "@types/three": "^0.156.0",
+    "three": "^0.156.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
