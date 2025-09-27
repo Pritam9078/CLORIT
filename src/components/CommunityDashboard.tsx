@@ -1,6 +1,16 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardHeader from './shared/DashboardHeader';
+import AnalyticsWidget from './shared/AnalyticsWidget';
+import NotificationSystem from './shared/NotificationSystem';
+import ProgressTracker from './shared/ProgressTracker';
+import QuickActions from './shared/QuickActions';
+import WeatherWidget from './shared/WeatherWidget';
+import PerformanceMonitor from './shared/PerformanceMonitor';
+import ResourceUsageWidget from './shared/ResourceUsageWidget';
+import ActivityFeed from './shared/ActivityFeed';
+import DataVisualizationHub from './shared/DataVisualizationHub';
+import SettingsPreferences from './shared/SettingsPreferences';
 import { AuthUtils } from '../utils/auth';
 import { CurrencyUtils } from '../utils/currency';
 
@@ -130,6 +140,7 @@ const CommunityDashboard = () => {
       />
       
       <main style={styles.main}>
+        {/* Enhanced Stats Grid */}
         <div style={styles.statsGrid}>
           <div style={styles.statCard}>
             <div style={styles.statIcon}>🌱</div>
@@ -171,6 +182,81 @@ const CommunityDashboard = () => {
           </div>
         </div>
 
+        {/* New Enhanced Widgets Section */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+          gap: '2rem',
+          marginBottom: '3rem'
+        }}>
+          {/* Analytics Widget */}
+          <AnalyticsWidget userRole="community" />
+          
+          {/* Progress Tracker */}
+          <ProgressTracker userRole="community" />
+        </div>
+
+        {/* Second Row of Widgets */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+          gap: '2rem',
+          marginBottom: '3rem'
+        }}>
+          {/* Quick Actions */}
+          <QuickActions userRole="community" />
+          
+          {/* Weather Widget */}
+          <WeatherWidget location="Your Plantation Area" />
+        </div>
+
+        {/* Third Row of Widgets - System Performance & Activity */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+          gap: '2rem',
+          marginBottom: '3rem'
+        }}>
+          {/* Performance Monitor */}
+          <PerformanceMonitor className="h-auto" />
+          
+          {/* Resource Usage Widget */}
+          <ResourceUsageWidget className="h-auto" />
+        </div>
+
+        {/* Fourth Row - Activity Feed (Full Width) */}
+        <div style={{
+          marginBottom: '3rem'
+        }}>
+          <ActivityFeed 
+            className="w-full" 
+            userRole="community" 
+            maxItems={15}
+            filterByRole={false}
+          />
+        </div>
+
+        {/* Fifth Row - Advanced Analytics & Settings */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+          gap: '2rem',
+          marginBottom: '3rem'
+        }}>
+          {/* Data Visualization Hub */}
+          <DataVisualizationHub 
+            className="h-auto" 
+            userRole="community" 
+          />
+          
+          {/* Settings & Preferences */}
+          <SettingsPreferences 
+            className="h-auto" 
+            userRole="community" 
+          />
+        </div>
+
+        {/* Original Actions Grid - Now Enhanced */}
         <div style={styles.actionsGrid}>
           <div style={styles.actionCard}>
             <div style={styles.actionIcon}>🌳</div>

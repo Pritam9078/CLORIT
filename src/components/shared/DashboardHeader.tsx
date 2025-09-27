@@ -4,6 +4,7 @@ import { AuthUtils, UserProfile } from '../../utils/auth';
 import { WalletUtils, WalletState } from '../../utils/walletUtils';
 import LogoutModal from './LogoutModal';
 import ProfileManager from './ProfileManager';
+import NotificationSystem from './NotificationSystem';
 
 interface DashboardHeaderProps {
   title: string;
@@ -295,6 +296,9 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ title, userRole, subt
           </div>
 
           <div style={styles.rightSection}>
+            {/* Notification System */}
+            <NotificationSystem userRole={userRole} className="mr-4" />
+            
             {walletState?.isConnected && (
               <div style={styles.walletInfo}>
                 🦊 {WalletUtils.formatAddress(walletState.address!)} 
