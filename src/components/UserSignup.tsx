@@ -7,7 +7,16 @@ const UserSignup = () => {
     password: '',
     confirmPassword: '',
     role: 'community',
-    organization: '',
+    // Community fields
+    communityName: '',
+    // NGO fields
+    ngoName: '',
+    registrationNumber: '',
+    website: '',
+    // Panchayat fields
+    panchayatName: '',
+    wardBlockNumber: '',
+    // Common fields
     location: '',
     phone: ''
   });
@@ -155,14 +164,83 @@ const UserSignup = () => {
       return;
     }
 
-    // Mock signup success
-    alert(`Account created successfully for ${formData.role}! Please check your email for verification.`);
+    // Validate required fields based on role
+    if (formData.role === 'community' && !formData.communityName) {
+      alert('Community/Village name is required!');
+      return;
+    }
+    if (formData.role === 'ngo' && (!formData.ngoName || !formData.registrationNumber)) {
+      alert('NGO name and registration number are required!');
+      return;
+    }
+    if (formData.role === 'panchayat' && (!formData.panchayatName || !formData.wardBlockNumber)) {
+      alert('Panchayat name and ward/block number are required!');
+      return;
+    }
+
+    // Create user object with role-specific data
+    const userData = {
+      id: Date.now().toString(), // Simple ID generation for prototype
+      fullName: formData.fullName,
+      email: formData.email,
+      role: formData.role,
+      location: formData.location,
+      phone: formData.phone,
+      createdAt: new Date().toISOString(),
+      isActive: true,
+      // Role-specific fields
+      ...(formData.role === 'community' && { communityName: formData.communityName }),
+      ...(formData.role === 'ngo' && { 
+        ngoName: formData.ngoName, 
+        registrationNumber: formData.registrationNumber,
+        website: formData.website || null
+      }),
+      ...(formData.role === 'panchayat' && { 
+        panchayatName: formData.panchayatName, 
+        wardBlockNumber: formData.wardBlockNumber 
+      })
+    };
+
+    // Store user data in localStorage (prototype implementation)
+    const existingUsers = JSON.parse(localStorage.getItem('clorit_users') || '[]');
     
-    // Route based on role
-    if (formData.role === 'corporate-buyer') {
-      window.location.href = '/corporate-dashboard';
-    } else {
-      window.location.href = '/user-login';
+    // Check if email already exists
+    const emailExists = existingUsers.some((user: any) => user.email === formData.email);
+    if (emailExists) {
+      alert('An account with this email already exists!');
+      return;
+    }
+
+    // Add new user
+    existingUsers.push(userData);
+    localStorage.setItem('clorit_users', JSON.stringify(existingUsers));
+    
+    // Set current user session
+    localStorage.setItem('clorit_current_user', JSON.stringify(userData));
+    localStorage.setItem('clorit_auth_token', 'prototype_token_' + Date.now());
+
+    // Success message
+    const roleNames = {
+      community: 'Community Member',
+      ngo: 'NGO Representative',
+      panchayat: 'Panchayat Official'
+    };
+
+    alert(`🎉 Welcome to CLORIT!\n\nAccount created successfully as ${roleNames[formData.role]}.\n\nYou can now access your personalized dashboard.`);
+    
+    // Route to appropriate dashboard based on role
+    switch (formData.role) {
+      case 'community':
+        window.location.href = '/community-dashboard';
+        break;
+      case 'ngo':
+        window.location.href = '/ngo-dashboard';
+        break;
+      case 'panchayat':
+        window.location.href = '/panchayat-dashboard';
+        break;
+      default:
+        window.location.href = '/dashboard';
     }
   };
 
@@ -215,8 +293,7 @@ const UserSignup = () => {
               {[
                 { value: 'community', label: '🏘️ Community', desc: 'Member' },
                 { value: 'ngo', label: '🏢 NGO', desc: 'Verifier' },
-                { value: 'panchayat', label: '🏛️ Panchayat', desc: 'Official' },
-                { value: 'corporate-buyer', label: '🏭 Corporate', desc: 'Buyer' }
+                { value: 'panchayat', label: '🏛️ Panchayat', desc: 'Official' }
               ].map(role => (
                 <button
                   key={role.value}
@@ -234,22 +311,91 @@ const UserSignup = () => {
             </div>
           </div>
 
-          <div style={styles.formGroup}>
-            <label style={styles.label}>
-              {formData.role === 'community' ? 'Community/Village Name' : 'Organization Name'}
-            </label>
-            <input
-              type="text"
-              name="organization"
-              value={formData.organization}
-              onChange={handleInputChange}
-              placeholder={formData.role === 'community' ? 'Enter your community name' : 'Enter organization name'}
-              style={styles.input}
-              onFocus={(e) => (e.target.style.borderColor = '#10b981')}
-              onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
-              required
-            />
-          </div>
+          {/* Role-specific fields */}
+          {formData.role === 'community' && (
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Community/Village Name</label>
+              <input
+                type="text"
+                name="communityName"
+                value={formData.communityName}
+                onChange={handleInputChange}
+                placeholder="Enter your community name"
+                style={styles.input}
+                onFocus={(e) => (e.target.style.borderColor = '#10b981')}
+                onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+                required
+              />
+            </div>
+          )}
+
+          {formData.role === 'ngo' && (
+            <>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>NGO/Organization Name</label>
+                <input
+                  type="text"
+                  name="ngoName"
+                  value={formData.ngoName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your NGO name"
+                  style={styles.input}
+                  onFocus={(e) => (e.target.style.borderColor = '#10b981')}
+                  onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+                  required
+                />
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Registration Number</label>
+                <input
+                  type="text"
+                  name="registrationNumber"
+                  value={formData.registrationNumber}
+                  onChange={handleInputChange}
+                  placeholder="Enter NGO registration ID"
+                  style={styles.input}
+                  onFocus={(e) => (e.target.style.borderColor = '#10b981')}
+                  onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+                  required
+                />
+              </div>
+            </>
+          )}
+
+          {formData.role === 'panchayat' && (
+            <>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Panchayat Name</label>
+                <input
+                  type="text"
+                  name="panchayatName"
+                  value={formData.panchayatName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your Panchayat name"
+                  style={styles.input}
+                  onFocus={(e) => (e.target.style.borderColor = '#10b981')}
+                  onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+                  required
+                />
+              </div>
+              
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Ward/Block Number</label>
+                <input
+                  type="text"
+                  name="wardBlockNumber"
+                  value={formData.wardBlockNumber}
+                  onChange={handleInputChange}
+                  placeholder="Enter your ward or block number"
+                  style={styles.input}
+                  onFocus={(e) => (e.target.style.borderColor = '#10b981')}
+                  onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+                  required
+                />
+              </div>
+            </>
+          )}
 
           <div style={styles.formGroup}>
             <label style={styles.label}>Location</label>
@@ -273,13 +419,34 @@ const UserSignup = () => {
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              placeholder="Enter your phone number"
+              placeholder={
+                formData.role === 'ngo' || formData.role === 'panchayat' 
+                  ? "Enter official contact number"
+                  : "Enter your phone number"
+              }
               style={styles.input}
               onFocus={(e) => (e.target.style.borderColor = '#10b981')}
               onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
               required
             />
           </div>
+
+          {/* Website field for NGO only */}
+          {formData.role === 'ngo' && (
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Website (Optional)</label>
+              <input
+                type="url"
+                name="website"
+                value={formData.website}
+                onChange={handleInputChange}
+                placeholder="Enter NGO website"
+                style={styles.input}
+                onFocus={(e) => (e.target.style.borderColor = '#10b981')}
+                onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+              />
+            </div>
+          )}
 
           <div style={styles.formGroup}>
             <label style={styles.label}>Password</label>

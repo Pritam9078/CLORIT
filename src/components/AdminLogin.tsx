@@ -365,7 +365,6 @@ const AdminLogin = () => {
           Corporate Buyer: buyer@company.com<br />
           Password: any<br /><br />
           <strong>NCCR Super Admin:</strong><br />
-          NCCR Admin: admin@nccr.gov<br />
           Key: NCCR987
         </div>
       </div>

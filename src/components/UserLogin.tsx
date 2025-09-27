@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import prototypeAuth, { initializeSampleData } from '../utils/api';
 
 const UserLogin = () => {
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
   });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Initialize sample data for demo
+    initializeSampleData();
+  }, []);
 
   const styles = {
     container: {
@@ -113,63 +120,44 @@ const UserLogin = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     
-    // Prevent wallet extension interference
     try {
-      // Clear any wallet-related errors
-      if (window.ethereum) {
-        window.ethereum.removeAllListeners();
+      // Use prototype authentication
+      const result = prototypeAuth.login(credentials);
+      
+      if (result.success && result.user) {
+        const roleNames = {
+          community: 'Community Member',
+          ngo: 'NGO Representative', 
+          panchayat: 'Panchayat Official'
+        };
+
+        alert(`🎉 Welcome back!\n\nLogged in as: ${roleNames[result.user.role]}\nName: ${result.user.fullName}`);
+        
+        // Redirect to appropriate dashboard
+        switch (result.user.role) {
+          case 'community':
+            window.location.href = '/community-dashboard';
+            break;
+          case 'ngo':
+            window.location.href = '/ngo-dashboard';
+            break;
+          case 'panchayat':
+            window.location.href = '/panchayat-dashboard';
+            break;
+          default:
+            window.location.href = '/dashboard';
+        }
+      } else {
+        alert(`❌ Login failed: ${result.message}`);
       }
     } catch (error) {
-      // Ignore wallet-related errors
-      console.warn('Wallet extension detected but ignored for authentication');
+      console.error('Login error:', error);
+      alert('❌ Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    
-    // Mock role detection - in real app this would come from backend
-    const userRoles = {
-      'community@example.com': 'community',
-      'ngo@example.com': 'ngo', 
-      'admin@panchayat.gov': 'panchayat-admin'
-    };
-    
-    const userRole = userRoles[credentials.email as keyof typeof userRoles] || 'community';
-    
-    // Save authentication token and user profile (wallet-free)
-    const authToken = `auth_${Date.now()}_${userRole}`;
-    localStorage.setItem('authToken', authToken);
-    
-    const userProfile = {
-      id: `${userRole}-${Date.now()}`,
-      name: getUserNameByRole(userRole),
-      email: credentials.email,
-      role: userRole,
-    };
-    localStorage.setItem('userProfile', JSON.stringify(userProfile));
-    
-    // Redirect based on role
-    switch (userRole) {
-      case 'community':
-        window.location.href = '/community-dashboard';
-        break;
-      case 'ngo':
-        window.location.href = '/ngo-dashboard';
-        break;
-      case 'panchayat-admin':
-        window.location.href = '/panchayat-admin-dashboard';
-        break;
-      default:
-        window.location.href = '/community-dashboard';
-        break;
-    }
-  };
-
-  const getUserNameByRole = (role: string): string => {
-    const roleNames = {
-      'community': 'Rajesh Kumar',
-      'ngo': 'Environmental NGO',
-      'panchayat-admin': 'Panchayat Administrator'
-    };
-    return roleNames[role as keyof typeof roleNames] || 'User';
   };
 
   const handleBack = () => {
@@ -217,17 +205,26 @@ const UserLogin = () => {
 
           <button
             type="submit"
-            style={styles.loginButton}
+            disabled={loading}
+            style={{
+              ...styles.loginButton,
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? 'not-allowed' : 'pointer'
+            }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
+              if (!loading) {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
+              if (!loading) {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }
             }}
           >
-            Login to Dashboard
+            {loading ? 'Logging in...' : 'Login to Dashboard'}
           </button>
 
           <div style={styles.forgotPassword}>
@@ -261,11 +258,13 @@ const UserLogin = () => {
           fontSize: '0.8rem',
           color: '#6b7280'
         }}>
-          <strong>Demo Accounts:</strong><br />
-          Community: community@example.com<br />
-          NGO: ngo@example.com<br />
-          Panchayat Admin: admin@panchayat.gov<br />
-          Password: any
+          <strong>🎭 Prototype Demo Accounts:</strong><br />
+          <div style={{ marginTop: '0.5rem', lineHeight: '1.4' }}>
+            • <strong>Community:</strong> rajesh@community.com<br />
+            • <strong>NGO:</strong> priya@greenngo.org<br />
+            • <strong>Panchayat:</strong> lakshmi@panchayat.gov.in<br />
+            <em>Password: any (prototype mode)</em>
+          </div>
         </div>
       </div>
     </div>

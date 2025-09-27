@@ -26,7 +26,7 @@ ChartJS.register(
 );
 
 interface AnalyticsWidgetProps {
-  userRole: 'community' | 'ngo' | 'panchayat' | 'corporate' | 'nccr';
+  userRole: 'community' | 'ngo' | 'panchayat';
   className?: string;
 }
 
@@ -50,11 +50,11 @@ const AnalyticsWidget: React.FC<AnalyticsWidgetProps> = ({ userRole, className =
         earnings: [8500, 10200, 12800, 11500, 14800, 17200, 15900, 19100, 22400, 20800, 24300, 28100],
         projects: [3, 4, 5, 6, 7, 8, 9, 11, 13, 14, 16, 18]
       },
-      corporate: {
-        carbon: [125.8, 142.3, 168.7, 155.2, 189.4, 212.6, 198.3, 225.8, 251.4, 238.9, 267.2, 294.5],
-        trees: [850, 980, 1150, 1065, 1285, 1420, 1335, 1540, 1725, 1640, 1845, 2050],
-        earnings: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Corporate buys, doesn't earn
-        projects: [12, 15, 18, 21, 25, 28, 32, 36, 41, 45, 50, 55]
+      panchayat: {
+        carbon: [25.8, 32.1, 42.3, 38.7, 48.9, 55.2, 51.8, 62.4, 71.6, 68.3, 78.9, 86.5],
+        trees: [180, 220, 285, 260, 335, 390, 365, 445, 520, 485, 565, 640],
+        earnings: [15500, 19200, 24800, 22500, 29800, 34200, 31900, 39100, 46400, 42800, 50300, 58100],
+        projects: [5, 6, 8, 9, 11, 13, 15, 17, 20, 22, 25, 28]
       }
     };
 
@@ -84,7 +84,7 @@ const AnalyticsWidget: React.FC<AnalyticsWidgetProps> = ({ userRole, className =
     const distributions = {
       community: { 'Mangrove Restoration': 40, 'Tree Planting': 35, 'Soil Conservation': 25 },
       ngo: { 'Community Projects': 45, 'Research Initiatives': 30, 'Education Programs': 25 },
-      corporate: { 'Carbon Offsetting': 50, 'Sustainability Projects': 30, 'Green Initiatives': 20 }
+      panchayat: { 'District Projects': 50, 'Policy Implementation': 30, 'Community Coordination': 20 }
     };
 
     const dist = distributions[userRole] || distributions.community;
@@ -178,7 +178,7 @@ const AnalyticsWidget: React.FC<AnalyticsWidgetProps> = ({ userRole, className =
     },
     animation: {
       duration: 1000,
-      easing: 'easeInOutQuart',
+      easing: 'easeInOutQuart' as const,
     }
   };
 
