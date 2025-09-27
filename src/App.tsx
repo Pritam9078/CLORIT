@@ -35,6 +35,8 @@ import EarnCredits from "./components/EarnCredits";
 import NDVIApp from "./components/NDVIApp";
 import Preloader from "./components/Preloader";
 import WalletTestPage from "./pages/WalletTestPage";
+import Profile from "./components/Profile";
+import Settings from "./components/Settings";
 
 const queryClient = new QueryClient();
 
@@ -99,6 +101,8 @@ const App = () => {
           {/* User Dashboards */}
           <Route path="/community-dashboard" element={<CommunityDashboard />} />
           <Route path="/ngo-dashboard" element={<NGODashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
           
           {/* Admin Dashboards */}
           <Route path="/corporate-dashboard" element={<CorporateDashboard />} />

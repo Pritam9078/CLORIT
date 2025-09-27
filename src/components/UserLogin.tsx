@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import prototypeAuth, { initializeSampleData } from '../utils/api';
 
 const UserLogin = () => {
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     // Initialize sample data for demo
@@ -107,6 +110,16 @@ const UserLogin = () => {
       fontWeight: 500,
       transition: 'all 0.2s',
       marginTop: '1.5rem'
+    },
+    errorMessage: {
+      backgroundColor: '#fee2e2',
+      border: '1px solid #fca5a5',
+      borderRadius: '8px',
+      padding: '0.75rem',
+      marginBottom: '1rem',
+      fontSize: '0.875rem',
+      color: '#dc2626',
+      textAlign: 'center' as const
     }
   };
 
@@ -116,52 +129,59 @@ const UserLogin = () => {
       ...prev,
       [name]: value
     }));
+    // Clear error when user starts typing
+    if (error) setError('');
   };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(''); // Clear any previous errors
     
     try {
       // Use prototype authentication
       const result = prototypeAuth.login(credentials);
       
       if (result.success && result.user) {
-        const roleNames = {
-          community: 'Community Member',
-          ngo: 'NGO Representative', 
-          panchayat: 'Panchayat Official'
+        // Save user profile for the AuthUtils (used by dashboards)
+        const userProfile = {
+          id: result.user.id,
+          name: result.user.fullName,
+          email: result.user.email,
+          role: result.user.role
         };
-
-        alert(`🎉 Welcome back!\n\nLogged in as: ${roleNames[result.user.role]}\nName: ${result.user.fullName}`);
         
-        // Redirect to appropriate dashboard
+        // Save to localStorage for AuthUtils compatibility
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        localStorage.setItem('authToken', 'prototype_token_' + Date.now());
+        
+        // Silent redirect to appropriate dashboard based on role
         switch (result.user.role) {
           case 'community':
-            window.location.href = '/community-dashboard';
+            navigate('/community-dashboard');
             break;
           case 'ngo':
-            window.location.href = '/ngo-dashboard';
+            navigate('/ngo-dashboard');
             break;
           case 'panchayat':
-            window.location.href = '/panchayat-dashboard';
+            navigate('/panchayat-dashboard');
             break;
           default:
-            window.location.href = '/dashboard';
+            navigate('/dashboard');
         }
       } else {
-        alert(`❌ Login failed: ${result.message}`);
+        setError(result.message || 'Login failed. Please check your credentials.');
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('❌ Login failed. Please try again.');
+      setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleBack = () => {
-    window.location.href = '/login-options';
+    navigate('/login-options');
   };
 
   return (
@@ -173,6 +193,12 @@ const UserLogin = () => {
         </div>
 
         <form style={styles.form} onSubmit={handleLogin}>
+          {error && (
+            <div style={styles.errorMessage}>
+              {error}
+            </div>
+          )}
+          
           <div style={styles.formGroup}>
             <label style={styles.label}>Email Address</label>
             <input
