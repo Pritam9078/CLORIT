@@ -17,8 +17,10 @@ export default defineConfig(({ mode }) => ({
   },
   define: {
     global: 'globalThis',
+    'process.env': {}
   },
   optimizeDeps: {
-    include: ['crypto']
+    include: ['crypto'],
+    exclude: ['@walletconnect/modal']
   }
 }));

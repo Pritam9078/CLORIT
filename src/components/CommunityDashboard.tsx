@@ -131,7 +131,8 @@ const CommunityDashboard = () => {
       top: 0,
       zIndex: 1000,
       borderBottom: '1px solid #e2e8f0',
-      backdropFilter: 'blur(10px)'
+      backdropFilter: 'blur(10px)',
+      height: '80px'
     },
     navContainer: {
       maxWidth: '1400px',
@@ -139,14 +140,18 @@ const CommunityDashboard = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '1.25rem 2rem',
-      gap: '2rem'
+      padding: '0 2rem',
+      height: '80px',
+      gap: '1rem',
+      minHeight: '80px',
+      overflow: 'hidden'
     },
     logoContainer: {
       display: 'flex',
       alignItems: 'center',
       gap: '0.75rem',
-      flex: '0 0 auto'
+      flex: '0 0 auto',
+      minWidth: 'fit-content'
     },
     logoIcon: {
       width: '44px',
@@ -175,7 +180,8 @@ const CommunityDashboard = () => {
     navMenuContainer: {
       flex: 1,
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     navMenu: {
       display: 'flex',
@@ -183,9 +189,10 @@ const CommunityDashboard = () => {
       alignItems: 'center',
       listStyle: 'none',
       margin: 0,
+      padding: '0.5rem',
       backgroundColor: '#f8fafc',
       borderRadius: '12px',
-      padding: '0.5rem'
+      border: '1px solid #e2e8f0'
     },
     navMenuItem: {
       display: 'flex',
@@ -217,12 +224,16 @@ const CommunityDashboard = () => {
       display: 'none',
       padding: '0.75rem',
       backgroundColor: 'transparent',
-      border: '1px solid #e2e8f0',
+      border: '2px solid #e2e8f0',
       borderRadius: '8px',
-      fontSize: '1.25rem',
+      fontSize: '1.5rem',
       cursor: 'pointer',
       color: '#64748b',
-      transition: 'all 0.2s ease'
+      transition: 'all 0.2s ease',
+      height: '48px',
+      width: '48px',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     mobileMenu: {
       position: 'absolute' as const,
@@ -234,28 +245,42 @@ const CommunityDashboard = () => {
       display: 'none',
       flexDirection: 'column' as const,
       padding: '1rem 0',
-      backdropFilter: 'blur(10px)'
+      backdropFilter: 'blur(10px)',
+      borderTop: '1px solid #e2e8f0',
+      maxHeight: '90vh',
+      overflowY: 'auto' as const
     },
     profileContainer: {
       position: 'relative' as const,
       display: 'flex',
       alignItems: 'center',
-      flex: '0 0 auto'
+      gap: '0.75rem',
+      flex: '0 0 auto',
+      minWidth: 'fit-content',
+      maxWidth: '400px',
+      justifyContent: 'flex-end',
+      marginLeft: 'auto'
     },
     profileButton: {
       display: 'flex',
       alignItems: 'center',
-      gap: '0.75rem',
-      padding: '0.75rem 1rem',
+      gap: '0.5rem',
+      padding: '0.5rem 0.75rem',
       backgroundColor: 'transparent',
       border: '1px solid #e2e8f0',
       borderRadius: '10px',
       cursor: 'pointer',
       color: '#64748b',
       fontWeight: 500,
-      fontSize: '0.875rem',
+      fontSize: '0.8rem',
       transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+      minWidth: '120px',
+      justifyContent: 'center',
+      maxWidth: '180px',
+      whiteSpace: 'nowrap' as const,
+      overflow: 'hidden' as const,
+      textOverflow: 'ellipsis' as const
     },
     profileButtonHover: {
       backgroundColor: '#f8fafc',
@@ -443,17 +468,19 @@ const CommunityDashboard = () => {
     walletConnectBtn: {
       background: 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)',
       color: 'white',
-      padding: '0.75rem 1rem',
+      padding: '0.5rem 0.75rem',
       borderRadius: '8px',
       border: 'none',
       fontWeight: 600,
       cursor: 'pointer',
-      fontSize: '0.875rem',
+      fontSize: '0.8rem',
       transition: 'all 0.2s ease',
-      marginRight: '1rem',
       display: 'flex',
       alignItems: 'center',
-      boxShadow: '0 4px 12px rgba(22, 163, 74, 0.25)'
+      boxShadow: '0 4px 12px rgba(22, 163, 74, 0.25)',
+      whiteSpace: 'nowrap' as const,
+      minWidth: '120px',
+      justifyContent: 'center'
     },
     walletConnected: {
       display: 'flex',
@@ -461,9 +488,10 @@ const CommunityDashboard = () => {
       background: 'rgba(34, 197, 94, 0.1)',
       border: '2px solid rgba(34, 197, 94, 0.2)',
       borderRadius: '8px',
-      padding: '0.5rem 0.75rem',
-      marginRight: '1rem',
-      gap: '0.5rem'
+      padding: '0.4rem 0.6rem',
+      gap: '0.4rem',
+      minWidth: '140px',
+      maxWidth: '180px'
     },
     walletIcon: {
       fontSize: '1.2rem',
@@ -528,6 +556,8 @@ const CommunityDashboard = () => {
 
   const handleProfileAction = (action: string) => {
     setIsProfileDropdownOpen(false);
+    setIsMobileMenuOpen(false); // Close mobile menu when action is taken
+    
     switch (action) {
       case 'profile':
         navigate('/profile');
@@ -536,8 +566,24 @@ const CommunityDashboard = () => {
         navigate('/settings');
         break;
       case 'logout':
-        AuthUtils.logout();
-        navigate('/login');
+        try {
+          // Clear all local storage and auth data
+          localStorage.removeItem('CLORIT_USER');
+          localStorage.removeItem('CLORIT_AUTH_TOKEN');
+          localStorage.removeItem('CLORIT_WALLET_ADDRESS');
+          
+          // Use AuthUtils if available
+          if (AuthUtils && typeof AuthUtils.logout === 'function') {
+            AuthUtils.logout();
+          }
+          
+          // Force navigation to login
+          window.location.href = '/login';
+        } catch (error) {
+          console.error('Logout error:', error);
+          // Fallback logout
+          window.location.href = '/login';
+        }
         break;
     }
   };
@@ -601,7 +647,47 @@ const CommunityDashboard = () => {
           .stat-card:nth-child(3) { animation-delay: 0.3s; }
           .stat-card:nth-child(4) { animation-delay: 0.4s; }
 
-          @media (max-width: 767px) {
+          @media (max-width: 1024px) {
+            .nav-menu {
+              gap: 0.25rem !important;
+            }
+            .nav-menu-item {
+              padding: 0.5rem 1rem !important;
+              font-size: 0.8rem !important;
+            }
+            .logo-text {
+              font-size: 1.4rem !important;
+            }
+            .profile-container {
+              gap: 0.5rem !important;
+              max-width: 350px !important;
+            }
+            .profile-button {
+              padding: 0.4rem 0.6rem !important;
+              font-size: 0.75rem !important;
+              min-width: 100px !important;
+              max-width: 150px !important;
+            }
+            .profile-name {
+              max-width: 80px !important;
+              overflow: hidden !important;
+              text-overflow: ellipsis !important;
+            }
+            .wallet-connect-btn {
+              padding: 0.4rem 0.6rem !important;
+              font-size: 0.75rem !important;
+              min-width: 100px !important;
+            }
+            .wallet-connected {
+              min-width: 120px !important;
+              max-width: 150px !important;
+            }
+            .nav-container {
+              gap: 0.75rem !important;
+            }
+          }
+
+          @media (max-width: 768px) {
             .nav-menu {
               display: none !important;
             }
@@ -609,20 +695,20 @@ const CommunityDashboard = () => {
               display: none !important;
             }
             .mobile-menu-button {
-              display: block !important;
+              display: flex !important;
             }
             .mobile-menu {
               display: ${isMobileMenuOpen ? 'flex' : 'none'} !important;
             }
-            .stats-grid {
-              grid-template-columns: repeat(2, 1fr) !important;
-              gap: 1rem !important;
+            .nav-container {
+              padding: 0 1rem !important;
+              gap: 0.5rem !important;
             }
             .logo-container {
               flex: 1 !important;
             }
             .logo-text {
-              font-size: 1.4rem !important;
+              font-size: 1.3rem !important;
             }
             .logo-icon {
               width: 36px !important;
@@ -630,7 +716,7 @@ const CommunityDashboard = () => {
             }
           }
           
-          @media (min-width: 768px) {
+          @media (min-width: 769px) {
             .nav-menu {
               display: flex !important;
             }
@@ -648,6 +734,16 @@ const CommunityDashboard = () => {
             }
           }
 
+          /* Tablet landscape optimization */
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .nav-container {
+              padding: 0 1.5rem !important;
+            }
+            .profile-container {
+              margin-left: 0.5rem !important;
+            }
+          }
+
           @media (max-width: 480px) {
             .stats-grid {
               grid-template-columns: 1fr !important;
@@ -655,12 +751,25 @@ const CommunityDashboard = () => {
             .welcome-section h1 {
               font-size: 1.75rem !important;
             }
+            .nav-container {
+              padding: 0 0.75rem !important;
+            }
+            .logo-text {
+              font-size: 1.2rem !important;
+            }
           }
           
+          /* Enhanced hover effects */
           .nav-menu-item:hover {
             background-color: #e2e8f0 !important;
             color: #0ea5e9 !important;
             transform: translateY(-1px) !important;
+          }
+
+          .mobile-menu-button:hover {
+            background-color: #f1f5f9 !important;
+            border-color: #0ea5e9 !important;
+            color: #0ea5e9 !important;
           }
 
           /* Smooth scrolling */
@@ -710,12 +819,65 @@ const CommunityDashboard = () => {
           .nav-menu-item:hover::before {
             width: 80% !important;
           }
+
+          /* Mobile menu animations */
+          .mobile-menu {
+            transition: all 0.3s ease !important;
+          }
+
+          /* Profile dropdown animations */
+          .profile-dropdown {
+            transition: all 0.2s ease !important;
+          }
+
+          /* Ensure proper spacing and alignment */
+          .profile-container {
+            flex-shrink: 0 !important;
+          }
+
+          .nav-container {
+            min-width: 0 !important;
+          }
+
+          /* Responsive notification icon */
+          @media (max-width: 1024px) {
+            .notification-icon {
+              width: 36px !important;
+              height: 36px !important;
+            }
+          }
+
+          /* Very small screen adjustments */
+          @media (max-width: 320px) {
+            .nav-container {
+              padding: 0 0.5rem !important;
+            }
+            .logo-text {
+              font-size: 1.1rem !important;
+            }
+            .logo-icon {
+              width: 32px !important;
+              height: 32px !important;
+            }
+          }
+
+          /* Ensure profile elements don't break on overflow */
+          .profile-container * {
+            flex-shrink: 0;
+          }
+
+          .profile-name {
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         `}
       </style>
 
       {/* Top Navigation Bar */}
       <nav style={styles.navbar}>
-        <div style={styles.navContainer}>
+        <div className="nav-container" style={styles.navContainer}>
           {/* Logo Section */}
           <div style={styles.logoContainer} className="logo-container">
             <div style={styles.logoIcon} className="logo-icon">
@@ -768,9 +930,47 @@ const CommunityDashboard = () => {
 
           {/* Desktop Profile Section */}
           <div className="profile-container" style={styles.profileContainer}>
+            {/* Notifications */}
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '40px',
+              height: '40px',
+              backgroundColor: '#f8fafc',
+              borderRadius: '10px',
+              border: '1px solid #e2e8f0',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              flexShrink: 0
+            }}
+            className="notification-icon"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#e2e8f0';
+              e.currentTarget.style.borderColor = '#0ea5e9';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#f8fafc';
+              e.currentTarget.style.borderColor = '#e2e8f0';
+            }}
+            >
+              <span style={{ fontSize: '1.1rem' }}>🔔</span>
+              <div style={{
+                position: 'absolute',
+                top: '6px',
+                right: '6px',
+                width: '8px',
+                height: '8px',
+                backgroundColor: '#ef4444',
+                borderRadius: '50%',
+                border: '2px solid white'
+              }} />
+            </div>
+
             {/* Wallet Connection Button */}
             {walletConnected ? (
-              <div style={styles.walletConnected}>
+              <div style={styles.walletConnected} className="wallet-connected">
                 <div style={styles.walletIcon}>🔗</div>
                 <div style={styles.walletInfo}>
                   <div style={styles.walletAddress}>
@@ -791,6 +991,7 @@ const CommunityDashboard = () => {
             ) : (
               <button
                 style={styles.walletConnectBtn}
+                className="wallet-connect-btn"
                 onClick={() => setIsWalletModalOpen(true)}
               >
                 <span style={{ marginRight: '0.5rem' }}>🔗</span>
@@ -800,6 +1001,7 @@ const CommunityDashboard = () => {
 
             <button
               style={styles.profileButton}
+              className="profile-button"
               onClick={toggleProfileDropdown}
               onMouseEnter={(e) => {
                 Object.assign(e.currentTarget.style, styles.profileButtonHover);
@@ -812,7 +1014,7 @@ const CommunityDashboard = () => {
                 {getUserInitials(currentUser.name)}
               </div>
               <span className="profile-name">{currentUser.name}</span>
-              <span style={{ fontSize: '0.8rem' }}>
+              <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>
                 {isProfileDropdownOpen ? '▲' : '▼'}
               </span>
             </button>
@@ -890,14 +1092,15 @@ const CommunityDashboard = () => {
         <div className="mobile-menu" style={styles.mobileMenu}>
           {/* Mobile Profile Section */}
           <div style={{
-            padding: '1rem',
+            padding: '1.25rem',
             borderBottom: '1px solid #e5e7eb',
             backgroundColor: '#f8fafc'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.75rem'
+              gap: '0.75rem',
+              marginBottom: '1rem'
             }}>
               <div style={styles.profileAvatar}>
                 {getUserInitials(currentUser.name)}
@@ -906,6 +1109,78 @@ const CommunityDashboard = () => {
                 <div style={styles.profileName}>{currentUser.name}</div>
                 <div style={styles.profileEmail}>{currentUser.email}</div>
               </div>
+            </div>
+            
+            {/* Mobile Wallet & Notifications */}
+            <div style={{
+              display: 'flex',
+              gap: '0.75rem',
+              alignItems: 'center'
+            }}>
+              {/* Notifications */}
+              <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '40px',
+                height: '40px',
+                backgroundColor: 'white',
+                borderRadius: '10px',
+                border: '1px solid #e2e8f0',
+                cursor: 'pointer'
+              }}>
+                <span style={{ fontSize: '1.1rem' }}>🔔</span>
+                <div style={{
+                  position: 'absolute',
+                  top: '6px',
+                  right: '6px',
+                  width: '8px',
+                  height: '8px',
+                  backgroundColor: '#ef4444',
+                  borderRadius: '50%',
+                  border: '2px solid white'
+                }} />
+              </div>
+
+              {/* Mobile Wallet */}
+              {walletConnected ? (
+                <div style={{
+                  ...styles.walletConnected,
+                  marginRight: 0,
+                  flex: 1
+                }}>
+                  <div style={styles.walletIcon}>🔗</div>
+                  <div style={styles.walletInfo}>
+                    <div style={styles.walletAddress}>
+                      {WalletUtils.formatAddress(walletAddress)}
+                    </div>
+                    <div style={styles.walletBalance}>
+                      {parseFloat(walletBalance).toFixed(4)} ETH
+                    </div>
+                  </div>
+                  <button
+                    style={styles.walletDisconnectBtn}
+                    onClick={handleWalletDisconnect}
+                    title="Disconnect Wallet"
+                  >
+                    ×
+                  </button>
+                </div>
+              ) : (
+                <button
+                  style={{
+                    ...styles.walletConnectBtn,
+                    marginRight: 0,
+                    flex: 1,
+                    justifyContent: 'center'
+                  }}
+                  onClick={() => setIsWalletModalOpen(true)}
+                >
+                  <span style={{ marginRight: '0.5rem' }}>🔗</span>
+                  Connect Wallet
+                </button>
+              )}
             </div>
           </div>
 
@@ -918,27 +1193,33 @@ const CommunityDashboard = () => {
                 ...(activeMenuItem === item.id ? styles.navMenuItemActive : {}),
                 width: '100%',
                 justifyContent: 'flex-start',
-                margin: '0.25rem 1rem'
+                margin: '0.25rem 1rem',
+                borderRadius: '8px'
               }}
               onClick={() => handleMenuClick(item)}
             >
-              <span>{item.icon}</span>
+              <span style={{ fontSize: '1.2rem' }}>{item.icon}</span>
               {item.label}
             </button>
           ))}
 
           {/* Mobile Profile Actions */}
-          <div style={{ borderTop: '1px solid #e5e7eb', marginTop: '0.5rem' }}>
+          <div style={{ 
+            borderTop: '1px solid #e5e7eb', 
+            marginTop: '0.5rem',
+            paddingTop: '0.5rem'
+          }}>
             <button
               style={{
                 ...styles.navMenuItem,
                 width: '100%',
                 justifyContent: 'flex-start',
-                margin: '0.25rem 1rem'
+                margin: '0.25rem 1rem',
+                borderRadius: '8px'
               }}
               onClick={() => handleProfileAction('profile')}
             >
-              <span>👤</span>
+              <span style={{ fontSize: '1.2rem' }}>👤</span>
               View Profile
             </button>
             <button
@@ -946,11 +1227,12 @@ const CommunityDashboard = () => {
                 ...styles.navMenuItem,
                 width: '100%',
                 justifyContent: 'flex-start',
-                margin: '0.25rem 1rem'
+                margin: '0.25rem 1rem',
+                borderRadius: '8px'
               }}
               onClick={() => handleProfileAction('settings')}
             >
-              <span>⚙️</span>
+              <span style={{ fontSize: '1.2rem' }}>⚙️</span>
               Settings
             </button>
             <button
@@ -959,11 +1241,12 @@ const CommunityDashboard = () => {
                 width: '100%',
                 justifyContent: 'flex-start',
                 margin: '0.25rem 1rem',
-                color: '#ef4444'
+                color: '#ef4444',
+                borderRadius: '8px'
               }}
               onClick={() => handleProfileAction('logout')}
             >
-              <span>🚪</span>
+              <span style={{ fontSize: '1.2rem' }}>🚪</span>
               Logout
             </button>
           </div>

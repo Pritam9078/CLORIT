@@ -85,13 +85,19 @@ const App = () => {
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter 
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true
+        }}
+      >
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/original" element={<Index />} />
           
           {/* Authentication Routes */}
           <Route path="/login-options" element={<LoginOptions />} />
+          <Route path="/login" element={<LoginOptions />} />
           <Route path="/signup-options" element={<SignupOptions />} />
           <Route path="/user-login" element={<UserLogin />} />
           <Route path="/admin-login" element={<AdminLogin />} />
