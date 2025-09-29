@@ -115,7 +115,16 @@ const LandingPage = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Cleanup modal on component unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [activeModal, setActiveModal] = useState<'about' | 'privacy' | 'terms' | null>(null);
 
   // Animated counters effect
   useEffect(() => {
@@ -704,6 +713,78 @@ const LandingPage = () => {
         fontSize: '22px'
       })
     },
+    
+    // Modal styles
+    modalOverlay: {
+      position: 'fixed' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 10000,
+      padding: '1rem'
+    },
+    modalContent: {
+      backgroundColor: 'white',
+      borderRadius: '1rem',
+      padding: isMobile ? '1.5rem' : '2rem',
+      maxWidth: isMobile ? '95vw' : '800px',
+      maxHeight: '80vh',
+      overflow: 'auto',
+      position: 'relative' as const,
+      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+      animation: 'modalFadeIn 0.3s ease-out',
+      width: '100%'
+    },
+    modalHeader: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '1.5rem',
+      paddingBottom: '1rem',
+      borderBottom: '2px solid #e5e7eb'
+    },
+    modalTitle: {
+      fontSize: '1.75rem',
+      fontWeight: 700,
+      color: '#1e293b',
+      background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text' as const
+    },
+    modalCloseButton: {
+      background: 'none',
+      border: 'none',
+      fontSize: '1.5rem',
+      cursor: 'pointer',
+      color: '#64748b',
+      padding: '0.5rem',
+      borderRadius: '0.5rem',
+      transition: 'all 0.2s ease'
+    },
+    modalBody: {
+      color: '#374151',
+      lineHeight: 1.7,
+      fontSize: '1rem'
+    },
+    modalSection: {
+      marginBottom: '1.5rem'
+    },
+    modalSectionTitle: {
+      fontSize: '1.25rem',
+      fontWeight: 600,
+      color: '#1e293b',
+      marginBottom: '0.75rem'
+    },
+    modalSectionContent: {
+      marginBottom: '1rem'
+    },
+    
     contact: {
       padding: isMobile ? '2.5rem 1rem' : '3rem 2rem',
       background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
@@ -732,65 +813,67 @@ const LandingPage = () => {
     contactForm: {
       background: 'white',
       borderRadius: '1rem',
-      padding: '3rem',
-      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+      padding: isMobile ? '1.5rem' : '2rem',
+      boxShadow: '0 20px 40px -12px rgba(0, 0, 0, 0.25)',
       border: '1px solid rgba(226, 232, 240, 0.6)',
-      textAlign: 'left' as const
+      textAlign: 'left' as const,
+      maxWidth: '600px',
+      margin: '0 auto'
     },
     formGrid: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '1.5rem',
-      marginBottom: '1.5rem',
+      gap: '1rem',
+      marginBottom: '1rem',
       '@media (max-width: 768px)': {
         gridTemplateColumns: '1fr',
-        gap: '1rem'
+        gap: '0.75rem'
       }
     },
     formGroup: {
-      marginBottom: '1.5rem'
+      marginBottom: '1rem'
     },
     formLabel: {
       display: 'block',
       fontSize: '0.875rem',
       fontWeight: 600,
       color: '#374151',
-      marginBottom: '0.5rem'
+      marginBottom: '0.375rem'
     },
     formInput: {
       width: '100%',
-      padding: '0.75rem 1rem',
+      padding: '0.625rem 0.875rem',
       border: '2px solid #e5e7eb',
       borderRadius: '0.5rem',
-      fontSize: '1rem',
+      fontSize: '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: 'inherit'
     },
     formTextarea: {
       width: '100%',
-      padding: '0.75rem 1rem',
+      padding: '0.625rem 0.875rem',
       border: '2px solid #e5e7eb',
       borderRadius: '0.5rem',
-      fontSize: '1rem',
+      fontSize: '0.875rem',
       transition: 'all 0.3s ease',
       outline: 'none',
       fontFamily: 'inherit',
-      minHeight: '120px',
+      minHeight: '80px',
       resize: 'vertical' as const
     },
     submitButton: {
       width: '100%',
-      padding: '1rem 2rem',
+      padding: '0.75rem 1.5rem',
       background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
       color: 'white',
       border: 'none',
-      borderRadius: '0.75rem',
-      fontSize: '1.125rem',
+      borderRadius: '0.5rem',
+      fontSize: '1rem',
       fontWeight: 600,
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      boxShadow: '0 10px 20px rgba(59, 130, 246, 0.3)',
+      boxShadow: '0 8px 16px rgba(59, 130, 246, 0.3)',
       letterSpacing: '0.025em'
     },
     submitButtonDisabled: {
@@ -813,6 +896,101 @@ const LandingPage = () => {
       background: '#fef2f2',
       color: '#dc2626',
       border: '1px solid #fecaca'
+    },
+    // Technology Section Styles
+    technologySection: {
+      padding: isMobile ? '4rem 1rem' : '6rem 2rem',
+      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
+    },
+    technologyContainer: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      textAlign: 'center' as const
+    },
+    sectionSubtitle: {
+      fontSize: isMobile ? '1rem' : '1.125rem',
+      color: '#64748b',
+      marginBottom: '3rem',
+      lineHeight: 1.6
+    },
+    technologyGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+      gap: '2rem',
+      marginBottom: '4rem'
+    },
+    techCard: {
+      background: 'white',
+      borderRadius: '1rem',
+      padding: '2rem',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+      border: '1px solid #e2e8f0',
+      textAlign: 'left' as const,
+      transition: 'transform 0.3s ease'
+    },
+    techIcon: {
+      fontSize: '3rem',
+      marginBottom: '1rem',
+      display: 'block'
+    },
+    techTitle: {
+      fontSize: '1.25rem',
+      fontWeight: 700,
+      color: '#1e293b',
+      marginBottom: '1rem'
+    },
+    techDescription: {
+      color: '#64748b',
+      marginBottom: '1.5rem',
+      lineHeight: 1.6
+    },
+    techFeatures: {
+      listStyle: 'none',
+      padding: 0,
+      margin: 0,
+      color: '#475569'
+    },
+    // Marketplace Section Styles
+    marketplaceSection: {
+      padding: isMobile ? '4rem 1rem' : '6rem 2rem',
+      background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+      color: 'white'
+    },
+    marketplaceContainer: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      textAlign: 'center' as const
+    },
+    marketplaceGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+      gap: '2rem',
+      marginTop: '3rem'
+    },
+    marketplaceCard: {
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderRadius: '1rem',
+      padding: '2rem',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(10px)',
+      textAlign: 'left' as const
+    },
+    marketplaceIcon: {
+      fontSize: '2.5rem',
+      marginBottom: '1rem',
+      display: 'block'
+    },
+    marketplaceTitle: {
+      fontSize: '1.25rem',
+      fontWeight: 700,
+      marginBottom: '1.5rem',
+      color: 'white'
+    },
+    marketplaceFeatures: {
+      listStyle: 'none',
+      padding: 0,
+      margin: 0,
+      color: '#cbd5e1'
     }
   };
 
@@ -961,8 +1139,176 @@ const LandingPage = () => {
     }
   };
 
+  const openModal = (modalType: 'about' | 'privacy' | 'terms') => {
+    setActiveModal(modalType);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+    document.body.style.overflow = 'auto';
+  };
+
+  // Handle escape key for modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && activeModal) {
+        closeModal();
+      }
+    };
+
+    if (activeModal) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [activeModal]);
+
+  // Modal content data
+  const getModalContent = (type: 'about' | 'privacy' | 'terms') => {
+    const content = {
+      about: {
+        title: 'About CLORIT',
+        sections: [
+          {
+            title: 'Our Mission',
+            content: 'CLORIT is dedicated to revolutionizing carbon credit trading through blockchain technology, specifically focusing on blue carbon ecosystems. We connect restoration projects with global markets, ensuring transparency, verifiability, and fair compensation for coastal communities.'
+          },
+          {
+            title: 'What We Do',
+            content: 'We provide a comprehensive platform for coastal carbon credit management, from project registration and verification to trading and retirement. Our technology stack includes satellite monitoring, IoT sensors, AI analytics, and blockchain infrastructure to ensure the highest standards of accuracy and trust.'
+          },
+          {
+            title: 'Blue Carbon Focus',
+            content: 'Blue carbon ecosystems - mangroves, seagrass beds, and salt marshes - are among the most carbon-dense ecosystems on Earth. These coastal habitats sequester carbon at rates up to 10 times higher than terrestrial forests and can store carbon for millennia when undisturbed.'
+          },
+          {
+            title: 'Our Technology',
+            content: 'CLORIT leverages cutting-edge technology including high-resolution satellite imagery, drone surveys, IoT environmental sensors, artificial intelligence for change detection, and blockchain for immutable record keeping. This integrated approach ensures accurate measurement, reporting, and verification of carbon sequestration.'
+          },
+          {
+            title: 'Community Impact',
+            content: 'We believe in equitable benefit sharing with local communities who are the guardians of these critical ecosystems. Our platform ensures fair revenue distribution, capacity building programs, and sustainable livelihood opportunities for coastal communities engaged in restoration efforts.'
+          },
+          {
+            title: 'Global Reach',
+            content: 'CLORIT operates globally with a focus on coastal regions in developing countries where blue carbon projects can have the most significant environmental and social impact. We work with partners across Asia, Africa, Latin America, and other coastal regions to scale blue carbon restoration efforts.'
+          },
+          {
+            title: 'Join Our Mission',
+            content: 'Whether you are a coastal community, NGO, corporation, or individual interested in climate action, CLORIT provides the tools and platform to participate in the blue carbon economy. Together, we can restore coastal ecosystems, fight climate change, and build sustainable coastal livelihoods.'
+          }
+        ]
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        sections: [
+          {
+            title: 'Information We Collect',
+            content: 'We collect information you provide directly to us, such as when you create an account, use our services, or contact us. This includes your name, email address, organization details, and project information. We also automatically collect certain information about your device and usage patterns.'
+          },
+          {
+            title: 'How We Use Your Information',
+            content: 'We use the information we collect to provide, maintain, and improve our services, process transactions, send you technical notices and support messages, respond to your comments and questions, and for security and fraud prevention purposes.'
+          },
+          {
+            title: 'Information Sharing',
+            content: 'We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy. We may share information with service providers who assist us in operating our platform, conducting business, or serving users.'
+          },
+          {
+            title: 'Data Security',
+            content: 'We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. This includes encryption, secure data transmission protocols, and regular security audits.'
+          },
+          {
+            title: 'Blockchain Transparency',
+            content: 'Please note that certain information related to carbon credit transactions is recorded on public blockchains for transparency and verification purposes. This blockchain data is pseudonymous and does not directly reveal personal identities.'
+          },
+          {
+            title: 'Your Rights',
+            content: 'You have the right to access, update, or delete your personal information. You may also opt out of certain communications from us. To exercise these rights, please contact us using the information provided in the Contact section.'
+          },
+          {
+            title: 'Contact Information',
+            content: 'If you have any questions about this Privacy Policy, please contact us at clorit2025@gmail.com or through our contact form. You can also reach us on our social media channels: Twitter/X (@CLORIT_CO2), LinkedIn (CLORIT), and Instagram (@clorit.2025).'
+          }
+        ]
+      },
+      terms: {
+        title: 'Terms and Conditions',
+        sections: [
+          {
+            title: 'Acceptance of Terms',
+            content: 'By accessing and using the CLORIT platform, you accept and agree to be bound by the terms and provision of this agreement. These terms constitute a legally binding agreement between you and CLORIT.'
+          },
+          {
+            title: 'Platform Services',
+            content: 'CLORIT provides a blockchain-based platform for carbon credit registration, verification, trading, and retirement. Our services include project management tools, monitoring technology integration, marketplace functionality, and compliance reporting.'
+          },
+          {
+            title: 'User Responsibilities',
+            content: 'Users are responsible for providing accurate information, maintaining the security of their accounts, complying with applicable laws and regulations, and using the platform in accordance with these terms and our acceptable use policy.'
+          },
+          {
+            title: 'Carbon Credit Standards',
+            content: 'All carbon credits on our platform must meet recognized international standards and undergo rigorous verification processes. We work with accredited third-party verifiers and maintain compliance with relevant carbon accounting methodologies.'
+          },
+          {
+            title: 'Intellectual Property',
+            content: 'The CLORIT platform, including its software, content, and trademarks, is protected by intellectual property laws. Users are granted a limited license to use the platform for its intended purposes but may not reproduce, distribute, or create derivative works without permission.'
+          },
+          {
+            title: 'Liability Limitations',
+            content: 'CLORIT provides the platform "as is" and makes no warranties regarding its operation. Our liability is limited to the maximum extent permitted by law. Users assume responsibility for their use of the platform and any transactions conducted thereon.'
+          },
+          {
+            title: 'Dispute Resolution',
+            content: 'Any disputes arising from the use of the CLORIT platform will be resolved through binding arbitration in accordance with applicable arbitration rules. The governing law shall be determined based on the jurisdiction of the primary business operations.'
+          },
+          {
+            title: 'Modifications',
+            content: 'We reserve the right to modify these terms at any time. Users will be notified of significant changes via email and platform notifications. Continued use of the platform constitutes acceptance of the modified terms. The current version will always be available on our website with the last updated date clearly indicated.'
+          },
+          {
+            title: 'Contact and Support',
+            content: 'For questions about these Terms and Conditions, technical support, or general inquiries, please contact us at clorit2025@gmail.com. Our support team is available Monday through Friday, 9 AM to 6 PM IST. You can also connect with us on social media for updates and community discussions.'
+          }
+        ]
+      }
+    };
+    return content[type];
+  };
+
   return (
-    <div style={styles.container}>
+    <>
+      <style>{`
+        @keyframes modalFadeIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        /* Improve modal scrolling on mobile */
+        .modal-content::-webkit-scrollbar {
+          width: 8px;
+        }
+        .modal-content::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 4px;
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 4px;
+        }
+        .modal-content::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+      `}</style>
+      
+      <div style={styles.container}>
       {/* Header / Navbar */}
       <header style={styles.header}>
         <nav style={styles.navbar}>
@@ -977,8 +1323,9 @@ const LandingPage = () => {
           
           <ul style={styles.navMenu}>
             <li><a href="#features" style={styles.navLink} onClick={() => scrollToSection('features')}>Features</a></li>
+            <li><a href="#technology" style={styles.navLink} onClick={() => scrollToSection('technology')}>Technology</a></li>
+            <li><a href="#marketplace-features" style={styles.navLink} onClick={() => scrollToSection('marketplace-features')}>Marketplace</a></li>
             <li><a href="#how-it-works" style={styles.navLink} onClick={() => scrollToSection('how-it-works')}>How It Works</a></li>
-            <li><a href="#dashboard" style={styles.navLink} onClick={() => scrollToSection('dashboard')}>Dashboard</a></li>
             <li><a href="#faq" style={styles.navLink} onClick={() => scrollToSection('faq')}>Support</a></li>
             <li><a href="#contact" style={styles.navLink} onClick={() => scrollToSection('contact')}>Contact</a></li>
           </ul>
@@ -1219,17 +1566,115 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Technology & Features Deep Dive */}
+      <section id="technology" style={styles.technologySection}>
+        <div style={styles.technologyContainer}>
+          <h2 style={styles.sectionTitle}>Advanced Technology Stack</h2>
+          <p style={styles.sectionSubtitle}>
+            Built on cutting-edge technology to ensure transparency, accuracy, and scalability
+          </p>
+          
+          <div style={styles.technologyGrid}>
+            <div style={styles.techCard}>
+              <div style={styles.techIcon}>🔗</div>
+              <h3 style={styles.techTitle}>Blockchain Infrastructure</h3>
+              <p style={styles.techDescription}>
+                Multi-chain architecture supporting Ethereum, Polygon, and custom sidechains for optimal performance and cost efficiency.
+              </p>
+              <ul style={styles.techFeatures}>
+                <li>• Smart contract automation</li>
+                <li>• Immutable audit trails</li>
+                <li>• Cross-chain compatibility</li>
+                <li>• Gas-optimized transactions</li>
+              </ul>
+            </div>
+            
+            <div style={styles.techCard}>
+              <div style={styles.techIcon}>🛰️</div>
+              <h3 style={styles.techTitle}>Satellite & AI Monitoring</h3>
+              <p style={styles.techDescription}>
+                Advanced earth observation using Sentinel-2, Landsat, and commercial satellite data with machine learning algorithms.
+              </p>
+              <ul style={styles.techFeatures}>
+                <li>• Real-time change detection</li>
+                <li>• Biomass estimation models</li>
+                <li>• NDVI & spectral analysis</li>
+                <li>• Automated reporting</li>
+              </ul>
+            </div>
+            
+            <div style={styles.techCard}>
+              <div style={styles.techIcon}>📱</div>
+              <h3 style={styles.techTitle}>Mobile & Web Platform</h3>
+              <p style={styles.techDescription}>
+                Responsive platform with mobile apps for field data collection, real-time monitoring, and community engagement.
+              </p>
+              <ul style={styles.techFeatures}>
+                <li>• Offline data collection</li>
+                <li>• GPS & photo geotagging</li>
+                <li>• Push notifications</li>
+                <li>• Multi-language support</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Marketplace & Trading Features */}
+      <section id="marketplace-features" style={styles.marketplaceSection}>
+        <div style={styles.marketplaceContainer}>
+          <h2 style={styles.sectionTitle}>Advanced Marketplace Features</h2>
+          <div style={styles.marketplaceGrid}>
+            <div style={styles.marketplaceCard}>
+              <div style={styles.marketplaceIcon}>📊</div>
+              <h3 style={styles.marketplaceTitle}>Professional Trading Tools</h3>
+              <ul style={styles.marketplaceFeatures}>
+                <li>• Real-time order books & price charts</li>
+                <li>• Limit & market orders</li>
+                <li>• Bulk trading with volume discounts</li>
+                <li>• Portfolio analytics & tracking</li>
+                <li>• Risk management tools</li>
+              </ul>
+            </div>
+            
+            <div style={styles.marketplaceCard}>
+              <div style={styles.marketplaceIcon}>🏛️</div>
+              <h3 style={styles.marketplaceTitle}>Compliance & Reporting</h3>
+              <ul style={styles.marketplaceFeatures}>
+                <li>• Automated ESG reporting</li>
+                <li>• TCFD & CDP compliance</li>
+                <li>• Audit trail documentation</li>
+                <li>• Regulatory filing support</li>
+                <li>• Third-party verification</li>
+              </ul>
+            </div>
+            
+            <div style={styles.marketplaceCard}>
+              <div style={styles.marketplaceIcon}>🤖</div>
+              <h3 style={styles.marketplaceTitle}>AI-Powered Insights</h3>
+              <ul style={styles.marketplaceFeatures}>
+                <li>• Predictive pricing models</li>
+                <li>• Portfolio optimization</li>
+                <li>• Risk assessment algorithms</li>
+                <li>• Market trend analysis</li>
+                <li>• Automated recommendations</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Form */}
       <section id="contact" style={styles.contact}>
         <div style={styles.contactContainer}>
           <h2 style={styles.contactTitle}>Get in Touch</h2>
           <p style={styles.contactSubtitle}>
-            Have questions about CLORIT? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            Questions about CLORIT? Send us a quick message and we'll respond promptly.
           </p>
           
           <form style={{
             ...styles.contactForm,
-            padding: window.innerWidth <= 768 ? '2rem' : '3rem'
+            padding: window.innerWidth <= 768 ? '1.5rem' : '2rem'
           }} onSubmit={handleContactFormSubmit}>
             <div style={{
               ...styles.formGrid,
@@ -1383,10 +1828,25 @@ const LandingPage = () => {
             <div style={styles.footerSection}>
               <h4 style={styles.footerTitle}>Platform</h4>
               <div style={styles.footerLinks}>
-                <a href="#about" style={styles.footerLink}>About</a>
-                <a href="#privacy" style={styles.footerLink}>Privacy</a>
-                <a href="#terms" style={styles.footerLink}>Terms</a>
-                <a href="#contact" style={styles.footerLink}>Contact</a>
+                <button 
+                  onClick={() => openModal('about')} 
+                  style={{...styles.footerLink, background: 'none', border: 'none', cursor: 'pointer'}}
+                >
+                  About
+                </button>
+                <button 
+                  onClick={() => openModal('privacy')} 
+                  style={{...styles.footerLink, background: 'none', border: 'none', cursor: 'pointer'}}
+                >
+                  Privacy
+                </button>
+                <button 
+                  onClick={() => openModal('terms')} 
+                  style={{...styles.footerLink, background: 'none', border: 'none', cursor: 'pointer'}}
+                >
+                  Terms
+                </button>
+                <a href="#contact" onClick={() => scrollToSection('contact')} style={styles.footerLink}>Contact</a>
               </div>
             </div>
             <div style={styles.footerSection}>
@@ -1480,7 +1940,51 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* Modal */}
+      {activeModal && (
+        <div 
+          style={styles.modalOverlay}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeModal();
+          }}
+        >
+          <div style={styles.modalContent} className="modal-content">
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>
+                {getModalContent(activeModal).title}
+              </h2>
+              <button 
+                style={styles.modalCloseButton}
+                onClick={closeModal}
+                aria-label="Close modal"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f3f4f6';
+                  e.currentTarget.style.color = '#1f2937';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#64748b';
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <div style={styles.modalBody}>
+              {getModalContent(activeModal).sections.map((section, index) => (
+                <div key={index} style={styles.modalSection}>
+                  <h3 style={styles.modalSectionTitle}>{section.title}</h3>
+                  <div style={styles.modalSectionContent}>
+                    {section.content}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+    </>
   );
 };
 
