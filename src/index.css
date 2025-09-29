@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Blue Carbon Registry Design System - Ocean & Environmental Theme */
+
+@layer base {
+  :root {
+    /* Ocean Blue Theme */
+    --background: 210 45% 98%;
+    --foreground: 210 50% 8%;
+
+    --card: 210 20% 99%;
+    --card-foreground: 210 50% 8%;
+
+    --popover: 210 20% 99%;
+    --popover-foreground: 210 50% 8%;
+
+    /* Deep Ocean Primary */
+    --primary: 210 80% 15%;
+    --primary-foreground: 210 20% 98%;
+
+    /* Mangrove Teal Secondary */
+    --secondary: 180 25% 85%;
+    --secondary-foreground: 180 60% 12%;
+
+    /* Sustainable Green Accent */
+    --accent: 140 40% 85%;
+    --accent-foreground: 140 80% 15%;
+
+    --muted: 210 20% 92%;
+    --muted-foreground: 210 15% 45%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 20% 88%;
+    --input: 210 20% 94%;
+    --ring: 210 80% 15%;
+
+    /* Custom Ocean Gradients */
+    --gradient-ocean-depth: linear-gradient(135deg, hsl(210 80% 15%) 0%, hsl(200 90% 25%) 50%, hsl(180 70% 35%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(210 45% 98%) 0%, hsl(200 30% 95%) 100%);
+    --gradient-mangrove: linear-gradient(90deg, hsl(140 50% 45%) 0%, hsl(160 60% 40%) 100%);
+    
+    /* Elegant Shadows */
+    --shadow-ocean: 0 10px 40px -10px hsl(210 80% 15% / 0.15);
+    --shadow-float: 0 5px 25px -5px hsl(210 70% 20% / 0.12);
+    
+    /* Smooth Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark Ocean Theme */
+    --background: 210 50% 3%;
+    --foreground: 210 30% 95%;
+
+    --card: 210 45% 5%;
+    --card-foreground: 210 30% 95%;
+
+    --popover: 210 45% 5%;
+    --popover-foreground: 210 30% 95%;
+
+    --primary: 180 70% 55%;
+    --primary-foreground: 210 50% 3%;
+
+    --secondary: 210 30% 12%;
+    --secondary-foreground: 210 30% 85%;
+
+    --accent: 140 60% 20%;
+    --accent-foreground: 140 40% 85%;
+
+    --muted: 210 30% 8%;
+    --muted-foreground: 210 15% 65%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 30% 12%;
+    --input: 210 30% 10%;
+    --ring: 180 70% 55%;
+
+    /* Dark Ocean Gradients */
+    --gradient-ocean-depth: linear-gradient(135deg, hsl(210 50% 3%) 0%, hsl(200 60% 8%) 50%, hsl(180 50% 15%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(210 50% 3%) 0%, hsl(200 40% 6%) 100%);
+    --gradient-mangrove: linear-gradient(90deg, hsl(140 60% 20%) 0%, hsl(160 50% 25%) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-ocean {
+    background: var(--gradient-ocean-depth);
+  }
+  
+  .bg-gradient-surface {
+    background: var(--gradient-surface);
+  }
+  
+  .bg-gradient-mangrove {
+    background: var(--gradient-mangrove);
+  }
+  
+  .shadow-ocean {
+    box-shadow: var(--shadow-ocean);
+  }
+  
+  .shadow-float {
+    box-shadow: var(--shadow-float);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+}
