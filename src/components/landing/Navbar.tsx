@@ -36,11 +36,11 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                         className="flex items-center gap-3 cursor-pointer group"
                         onClick={() => navigate('/')}
                     >
-                        <div className="relative w-10 h-10 overflow-hidden rounded-lg bg-emerald-500/20 p-1 group-hover:bg-emerald-500/30 transition-colors">
+                        <div className="relative w-10 h-10 overflow-hidden rounded-lg bg-cyan-500/20 p-1 group-hover:bg-cyan-500/30 transition-colors">
                             <img src="/clorit-logo.png" alt="Logo" className="w-full h-full object-contain" />
-                            <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
-                        <span className="text-xl font-bold bg-gradient-to-r from-white to-emerald-400 bg-clip-text text-transparent tracking-tight">
+                        <span className="text-xl font-bold bg-gradient-to-r from-white to-cyan-400 bg-clip-text text-transparent tracking-tight">
                             CLORIT
                         </span>
                     </motion.div>
@@ -54,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 * i }}
-                                className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors"
+                                className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors"
                             >
                                 {link.icon}
                                 {link.name}
@@ -65,7 +65,7 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4 }}
                             onClick={onAboutClick}
-                            className="text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors"
+                            className="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors"
                         >
                             About Protocol
                         </motion.button>
@@ -85,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => navigate('/register')}
-                            className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] text-white px-6 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
+                            className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] text-white px-6 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-cyan-400/30"
                         >
                             <UserPlus className="w-4 h-4" />
                             Sign Up
@@ -116,14 +116,14 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                                 <a 
                                     key={link.name} 
                                     href={link.href}
-                                    className="block text-lg font-bold text-white hover:text-emerald-400"
+                                    className="block text-lg font-bold text-white hover:text-cyan-400"
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
                                     {link.name}
                                 </a>
                             ))}
                             <button 
-                                className="block text-lg font-bold text-white hover:text-emerald-400"
+                                className="block text-lg font-bold text-white hover:text-cyan-400"
                                 onClick={() => { onAboutClick?.(); setMobileMenuOpen(false); }}
                             >
                                 About Protocol
@@ -131,13 +131,13 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                             <div className="pt-6 space-y-4">
                                 <button 
                                     onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}
-                                    className="w-full py-3 bg-white/10 text-white rounded-xl font-bold"
+                                    className="w-full py-3 bg-white/10 text-white rounded-xl font-bold border border-white/10"
                                 >
                                     Sign In
                                 </button>
                                 <button 
                                     onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}
-                                    className="w-full py-3 bg-emerald-500 text-white rounded-xl font-bold"
+                                    className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 border border-cyan-400/30 text-white rounded-xl font-bold"
                                 >
                                     Sign Up
                                 </button>

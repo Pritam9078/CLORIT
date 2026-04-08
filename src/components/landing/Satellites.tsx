@@ -42,10 +42,10 @@ const Satellites: React.FC = () => {
         <group ref={groupRef}>
             {satelliteData.map((data) => (
                 <group key={data.id}>
-                    {/* Satellite Body */}
+                    {/* Satellite Body - Hyper-Glow Sphere */}
                     <mesh>
-                        <boxGeometry args={[0.05, 0.05, 0.1]} />
-                        <meshStandardMaterial color={data.color} emissive={data.color} emissiveIntensity={2} />
+                        <sphereGeometry args={[0.06, 16, 16]} />
+                        <meshStandardMaterial color="#ffffff" emissive={data.color} emissiveIntensity={5} />
                     </mesh>
                     
                     {/* Solar Panels */}
@@ -54,13 +54,13 @@ const Satellites: React.FC = () => {
                         <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.1} />
                     </mesh>
 
-                    {/* Data Beam (Light trail towards Earth) */}
+                    {/* Data Beam (Thicker light trail towards Earth) */}
                     <Line
                         points={[[0, 0, 0], [0, 0, -data.radius + 3]]}
                         color={data.color}
-                        lineWidth={0.5}
+                        lineWidth={1.5}
                         transparent
-                        opacity={0.3}
+                        opacity={0.6}
                     />
 
                     {/* Glowing point at contact */}

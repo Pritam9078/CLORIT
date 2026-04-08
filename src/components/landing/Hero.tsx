@@ -37,51 +37,51 @@ const Hero: React.FC = () => {
                     className="flex flex-col items-center"
                 >
                     {/* Badge */}
-                    <motion.div 
+                    <motion.div
                         variants={itemVariants}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-8 backdrop-blur-md"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-400/50 mb-8 backdrop-blur-md animate-glow-pulse shadow-[0_0_20px_rgba(34,211,238,0.3)]"
                     >
-                        <Zap className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
-                        <span className="text-sm font-bold text-emerald-400 uppercase tracking-widest">
+                        <Zap className="w-4 h-4 text-cyan-400 fill-cyan-400/20" />
+                        <span className="text-sm font-bold text-cyan-400 uppercase tracking-widest glow-text">
                             New: Satellite MRV 2.0
                         </span>
                     </motion.div>
 
                     {/* Headline */}
-                    <motion.h1 
+                    <motion.h1
                         variants={itemVariants}
-                        className="text-5xl md:text-8xl font-black text-white mb-6 leading-tight tracking-tight px-4"
+                        className="text-5xl md:text-8xl font-black text-white mb-6 leading-tight tracking-tight px-4 drop-shadow-[0_0_40px_rgba(0,210,255,0.7)]"
                     >
                         Monitor. Verify. <br />
-                        <span className="bg-gradient-to-r from-emerald-400 via-blue-500 to-emerald-400 bg-[length:200%_auto] animate-gradient-text bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-[length:200%_auto] animate-gradient-xy bg-clip-text text-transparent filter drop-shadow-[0_0_15px_rgba(59,130,246,0.9)]">
                             Monetize Nature.
                         </span>
                     </motion.h1>
 
                     {/* Subheadline */}
-                    <motion.p 
+                    <motion.p
                         variants={itemVariants}
                         className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-medium"
                     >
-                        The futuristic geospatial intelligence protocol for coastal restoration. 
-                        Tracking every mangrove growth with 30cm satellite precision and 
+                        The futuristic geospatial intelligence protocol for coastal restoration.
+                        Tracking every mangrove growth with 30cm satellite precision and
                         blockchain-certified integrity.
                     </motion.p>
 
                     {/* CTAs */}
-                    <motion.div 
+                    <motion.div
                         variants={itemVariants}
                         className="flex flex-col sm:flex-row items-center gap-6"
                     >
                         <button
                             onClick={() => navigate('/register')}
-                            className="group relative px-10 py-5 bg-emerald-500 text-slate-950 font-black text-lg rounded-2xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(16,185,129,0.3)]"
+                            className="group relative px-10 py-5 glass-cyan rounded-2xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-smooth hover:bg-cyan-500/20"
                         >
-                            Explore Dashboard
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            <div className="absolute inset-x-0 -bottom-1 h-1 bg-emerald-700 rounded-full blur-sm opacity-50" />
+                            <span className="font-black text-lg text-white">Explore Dashboard</span>
+                            <ArrowRight className="w-5 h-5 text-cyan-300 group-hover:translate-x-1 transition-transform" />
+                            <div className="absolute inset-x-0 -bottom-1 h-1 bg-cyan-400 rounded-full blur-sm opacity-50 group-hover:opacity-100 transition-opacity" />
                         </button>
-                        
+
                         <button
                             onClick={() => navigate('/login')}
                             className="px-10 py-5 bg-white/5 backdrop-blur-xl border border-white/10 text-white font-bold text-lg rounded-2xl hover:bg-white/10 transition-all flex items-center gap-2"
@@ -92,7 +92,7 @@ const Hero: React.FC = () => {
                     </motion.div>
 
                     {/* Trust Signals */}
-                    <motion.div 
+                    <motion.div
                         variants={itemVariants}
                         className="mt-20 flex flex-wrap justify-center items-center gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-700"
                     >
@@ -104,7 +104,7 @@ const Hero: React.FC = () => {
             </div>
 
             {/* Scroll Indicator */}
-            <motion.div 
+            <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2, duration: 1 }}

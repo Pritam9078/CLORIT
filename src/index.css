@@ -24,9 +24,9 @@
     --secondary: 180 25% 85%;
     --secondary-foreground: 180 60% 12%;
 
-    /* Sustainable Green Accent */
-    --accent: 140 40% 85%;
-    --accent-foreground: 140 80% 15%;
+    /* Sustainable Green Accent -> Hyper-Cyan Accent */
+    --accent: 190 90% 50%;
+    --accent-foreground: 190 90% 10%;
 
     --muted: 210 20% 92%;
     --muted-foreground: 210 15% 45%;
@@ -42,6 +42,7 @@
     --gradient-ocean-depth: linear-gradient(135deg, hsl(210 80% 15%) 0%, hsl(200 90% 25%) 50%, hsl(180 70% 35%) 100%);
     --gradient-surface: linear-gradient(180deg, hsl(210 45% 98%) 0%, hsl(200 30% 95%) 100%);
     --gradient-mangrove: linear-gradient(90deg, hsl(140 50% 45%) 0%, hsl(160 60% 40%) 100%);
+    --gradient-celestial: linear-gradient(135deg, hsl(210 100% 30%), hsl(190 100% 50%));
     
     /* Elegant Shadows */
     --shadow-ocean: 0 10px 40px -10px hsl(210 80% 15% / 0.15);
@@ -87,8 +88,8 @@
     --secondary: 210 30% 12%;
     --secondary-foreground: 210 30% 85%;
 
-    --accent: 140 60% 20%;
-    --accent-foreground: 140 40% 85%;
+    --accent: 190 100% 50%;
+    --accent-foreground: 190 100% 10%;
 
     --muted: 210 30% 8%;
     --muted-foreground: 210 15% 65%;
@@ -144,5 +145,47 @@
   
   .transition-bounce {
     transition: var(--transition-bounce);
+  }
+  
+  .glass-cyan {
+    @apply bg-white/5 backdrop-blur-xl border border-cyan-400/30 text-white shadow-[0_0_30px_rgba(34,211,238,0.15)];
+  }
+
+  .animate-gradient-xy {
+    animation: gradient-xy 8s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  .bg-cyber-grid {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+    border-color: rgba(34, 211, 238, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(34, 211, 238, 0.6);
+    border-color: rgba(34, 211, 238, 0.8);
+  }
+}
+
+@keyframes gradient-xy {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
 }
