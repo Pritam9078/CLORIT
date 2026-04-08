@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Wallet, Globe, Shield, TrendingUp } from 'lucide-react';
+import { Menu, X, UserPlus, Globe, Shield, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
@@ -79,7 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                             onClick={() => navigate('/login')}
                             className="bg-white/5 hover:bg-white/10 text-white px-5 py-2 rounded-xl text-sm font-semibold border border-white/10 transition-all"
                         >
-                            Log In
+                            Sign In
                         </motion.button>
                         <motion.button
                             whileHover={{ scale: 1.05 }}
@@ -87,8 +87,8 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                             onClick={() => navigate('/register')}
                             className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] text-white px-6 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
                         >
-                            <Wallet className="w-4 h-4" />
-                            Connect Wallet
+                            <UserPlus className="w-4 h-4" />
+                            Sign Up
                         </motion.button>
                     </div>
 
@@ -129,8 +129,18 @@ const Navbar: React.FC<NavbarProps> = ({ onAboutClick }) => {
                                 About Protocol
                             </button>
                             <div className="pt-6 space-y-4">
-                                <button className="w-full py-3 bg-white/10 text-white rounded-xl font-bold">Sign In</button>
-                                <button className="w-full py-3 bg-emerald-500 text-white rounded-xl font-bold">Get Started</button>
+                                <button 
+                                    onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}
+                                    className="w-full py-3 bg-white/10 text-white rounded-xl font-bold"
+                                >
+                                    Sign In
+                                </button>
+                                <button 
+                                    onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}
+                                    className="w-full py-3 bg-emerald-500 text-white rounded-xl font-bold"
+                                >
+                                    Sign Up
+                                </button>
                             </div>
                         </div>
                     </motion.div>

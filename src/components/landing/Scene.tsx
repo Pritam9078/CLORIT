@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars, PerspectiveCamera, Environment, Float } from '@react-three/drei';
-import Globe from './Globe';
-import Satellites from './Satellites';
+import Globe from '@/components/landing/Globe';
+import Satellites from '@/components/landing/Satellites';
 
 const Scene: React.FC = () => {
     return (
@@ -18,7 +18,7 @@ const Scene: React.FC = () => {
                 {/* Lighting */}
                 <ambientLight intensity={0.4} />
                 <pointLight position={[10, 10, 10]} intensity={1.5} color="#3b82f6" />
-                <pointLight position={[-10, -10, -10]} intensity={1} color="#22c55e" />
+                <pointLight position={[-10, -10, -10]} intensity={1} color="#60a5fa" />
                 <spotLight
                     position={[0, 5, 10]}
                     angle={0.3}
@@ -57,7 +57,7 @@ const Scene: React.FC = () => {
             
             {/* Gradient Overlay for better text readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950 opacity-40 pointer-events-none" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1),transparent_70%)] pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_70%)] pointer-events-none" />
         </div>
     );
 };

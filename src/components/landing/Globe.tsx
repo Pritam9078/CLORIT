@@ -34,28 +34,33 @@ const Globe: React.FC = () => {
                     bumpScale={0.05}
                     metalness={0.4}
                     roughness={0.7}
-                    emissive={new THREE.Color('#22c55e')}
-                    emissiveIntensity={0.2} // Subtle NDVI-style green glow
+                    emissive={new THREE.Color('#3b82f6')}
+                    emissiveIntensity={0.25} // Electric blue glow
                 />
             </Sphere>
 
-            {/* Clouds / Atmosphere Layer */}
-            <Sphere ref={atmosphereRef} args={[3.05, 64, 64]}>
-                <meshPhongMaterial
+            {/* Glassy Atmosphere Layer */}
+            <Sphere ref={atmosphereRef} args={[3.08, 64, 64]}>
+                <meshPhysicalMaterial
                     transparent
-                    opacity={0.3}
+                    opacity={0.4}
                     color="#93c5fd"
+                    transmission={0.8}
+                    thickness={1}
+                    roughness={0.1}
+                    clearcoat={1}
+                    clearcoatRoughness={0.1}
                     side={THREE.DoubleSide}
                     blending={THREE.AdditiveBlending}
                 />
             </Sphere>
 
             {/* Glowing Aura */}
-            <Sphere args={[3.2, 32, 32]}>
+            <Sphere args={[3.3, 32, 32]}>
                 <meshBasicMaterial
-                    color="#22c55e"
+                    color="#3b82f6"
                     transparent
-                    opacity={0.05}
+                    opacity={0.08}
                     side={THREE.BackSide}
                     blending={THREE.AdditiveBlending}
                 />

@@ -14,7 +14,7 @@ const Satellites: React.FC = () => {
             speed: 0.1 + Math.random() * 0.2,
             offset: Math.random() * Math.PI * 2,
             tilt: (Math.random() - 0.5) * Math.PI,
-            color: i % 2 === 0 ? '#22c55e' : '#3b82f6'
+            color: i % 2 === 0 ? '#3b82f6' : '#60a5fa'
         }));
     }, []);
 
