@@ -1,0 +1,6 @@
+projectId,name,region,state,latitude,longitude,status,ndviValue,area,carbonCredits,submittedBy,communityName,contactInfo
+CLORIT-3001,Kerala Backwaters Mangrove,Kerala,Kerala,9.9312,76.2673,submitted,0.65,45.2,1200,0x1234567890123456789012345678901234567890,Kerala Coastal Conservation,kerala@coastal.org
+CLORIT-3002,Tamil Nadu Seagrass Restoration,Tamil Nadu,Tamil Nadu,11.1271,78.6569,ngo-verified,0.72,32.5,980,0x2345678901234567890123456789012345678901,TN Marine Group,tn@marine.org
+CLORIT-3003,Gujarat Saltmarsh Project,Gujarat,Gujarat,22.2587,71.1924,panchayat-reviewed,0.68,28.7,850,0x3456789012345678901234567890123456789012,Gujarat Wetlands Trust,gujarat@wetlands.org
+CLORIT-3004,Odisha Coastal Mangrove,Odisha,Odisha,20.2961,85.8245,submitted,0.55,52.3,1450,0x4567890123456789012345678901234567890123,Odisha Coastal Community,odisha@coastal.org
+CLORIT-3005,Maharashtra Mangrove Belt,Maharashtra,Maharashtra,19.0760,72.8777,nccr-approved,0.78,67.8,1890,0x5678901234567890123456789012345678901234,Mumbai Mangrove Conservation,mumbai@mangrove.org
