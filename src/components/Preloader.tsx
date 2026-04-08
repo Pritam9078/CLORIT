@@ -51,11 +51,11 @@ const Preloader: React.FC<PreloaderProps> = ({ onLoadComplete }) => {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 30%, #f1f5f9 100%)',
+    background: 'radial-gradient(circle at center, #0f172a 0%, #020617 100%)',
     zIndex: 9999,
     opacity: animationPhase === 'fadeOut' ? 0 : 1,
-    transform: animationPhase === 'fadeOut' ? 'scale(1.05)' : 'scale(1)',
-    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+    transform: animationPhase === 'fadeOut' ? 'scale(1.1)' : 'scale(1)',
+    transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
   };
 
@@ -140,7 +140,7 @@ const Preloader: React.FC<PreloaderProps> = ({ onLoadComplete }) => {
   const textStyles: React.CSSProperties = {
     fontSize: '2.5rem',
     fontWeight: 800,
-    background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+    background: 'linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%)',
     backgroundClip: 'text',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',

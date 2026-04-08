@@ -42,11 +42,14 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
       <div className="w-full max-w-[1200px] flex flex-col lg:flex-row items-center gap-12 px-6 py-12 relative z-10">
         {/* Left Side: Branding & Info */}
         <div className="hidden lg:flex flex-col flex-1 text-white space-y-8 animate-in fade-in slide-in-from-left duration-1000">
-          <div className="flex items-center gap-5">
-             <div className="w-16 h-16 flex items-center justify-center">
+          <div className="flex items-center gap-6">
+             <div className="w-20 h-20 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 p-3 shadow-2xl shadow-emerald-500/10">
                 <img src="/clorit-logo.png" alt="CLORIT" className="w-full h-full object-contain" />
              </div>
-             <span className="text-5xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-gray-500 uppercase">CLORIT</span>
+             <div>
+                <span className="text-5xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-emerald-400 uppercase">CLORIT</span>
+                <p className="text-xs text-emerald-400 font-bold tracking-[0.3em] uppercase mt-1">Geospatial Protocol</p>
+             </div>
           </div>
 
           <div className="space-y-4">
@@ -84,17 +87,20 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
           transition={{ duration: 0.8, delay: 0.2 }}
           className="w-full max-w-md bg-[#0D151C]/80 backdrop-blur-2xl border border-white/10 rounded-[32px] p-8 lg:p-10 shadow-2xl shadow-emerald-950/20 relative"
         >
-          <div className="mb-10 flex flex-col items-start gap-8">
-            <a href="/" className="inline-flex items-center gap-3 group">
-              <div className="w-12 h-12 flex items-center justify-center group-hover:scale-105 transition-transform">
+          <div className="mb-10 flex flex-col items-center lg:items-start gap-8 text-center lg:text-left w-full">
+            <a href="/" className="inline-flex flex-col items-center lg:items-start gap-4 group">
+              <div className="w-16 h-16 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 p-2 group-hover:bg-white/10 transition-all shadow-xl shadow-emerald-500/5">
                 <img src="/clorit-logo.png" alt="Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="text-lg font-black tracking-tighter text-white group-hover:text-emerald-400 transition-colors uppercase">CLORIT</span>
+              <div className="flex flex-col items-center lg:items-start">
+                <span className="text-2xl font-black tracking-tighter text-white group-hover:text-emerald-400 transition-colors uppercase">CLORIT</span>
+                <div className="h-0.5 w-full bg-gradient-to-r from-emerald-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+              </div>
             </a>
 
-            <div>
+            <div className="w-full">
               <h2 className="text-3xl font-black text-white tracking-tight mb-2">{title}</h2>
-              <p className="text-gray-400 text-sm leading-relaxed max-w-[280px]">{subtitle}</p>
+              <p className="text-gray-400 text-sm leading-relaxed mx-auto lg:mx-0 max-w-[280px]">{subtitle}</p>
             </div>
           </div>
 

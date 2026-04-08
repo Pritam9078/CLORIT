@@ -5,7 +5,7 @@ import {
   User, Building2, Landmark, 
   Mail, Lock, MapPin, 
   Phone, Globe, Fingerprint, 
-  ArrowRight, Loader2, Wallet
+  ArrowRight, Loader2, Wallet, Check
 } from 'lucide-react';
 import AuthLayout from './AuthLayout';
 import { useAuthStore, type UserRole } from '../../state/authStore';
